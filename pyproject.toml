@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "resumesh-scrapers"
+dynamic = ["version"]
+description = "Standalone, reusable web scraping services for GitHub, Dev.to, and Medium — extracted from the ResuMesh project."
+readme = "README.md"
+license = "AGPL-3.0-only"
+requires-python = ">=3.11"
+authors = [
+    { name = "Ata Can Yaymacı" },
+]
+keywords = ["scraper", "github", "medium", "devto", "portfolio", "cv"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "feedparser>=6.0",
+    "tenacity>=8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/AtaCanYmc/ResuMesh"
+Repository = "https://github.com/AtaCanYmc/ResuMesh"
+
+[tool.hatch.version]
+path = "src/resumesh_scrapers/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/resumesh_scrapers"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
