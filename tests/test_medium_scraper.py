@@ -1,5 +1,6 @@
 """Tests for MediumScraperService."""
 
+import httpx
 import pytest
 import respx
 from httpx import Response
@@ -133,7 +134,7 @@ class TestMediumScraperFetchData:
     @pytest.mark.asyncio
     async def test_fetch_articles_network_error(self, scraper):
         respx.get("https://medium.com/feed/@testuser").mock(
-            side_effect=ConnectionError("dns failure")
+            side_effect=httpx.ConnectError("dns failure")
         )
 
         with pytest.raises(MediumScraperError, match="Network error"):

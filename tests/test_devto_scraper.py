@@ -1,5 +1,6 @@
 """Tests for DevToScraperService."""
 
+import httpx
 import pytest
 import respx
 from httpx import Response
@@ -80,7 +81,7 @@ class TestDevToScraperFetchData:
     @pytest.mark.asyncio
     async def test_fetch_articles_network_error(self, scraper):
         respx.get("https://dev.to/api/articles").mock(
-            side_effect=ConnectionError("timeout")
+            side_effect=httpx.ConnectError("timeout")
         )
 
         with pytest.raises(DevToScraperError, match="Network error"):
