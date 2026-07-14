@@ -1,20 +1,24 @@
 # resumesh-scrapers
 
+[![PyPI version](https://img.shields.io/pypi/v/resumesh-scrapers.svg)](https://pypi.org/project/resumesh-scrapers/)
+[![Python versions](https://img.shields.io/pypi/pyversions/resumesh-scrapers.svg)](https://pypi.org/project/resumesh-scrapers/)
+[![License](https://img.shields.io/pypi/l/resumesh-scrapers.svg)](https://github.com/AtaCanYmc/resumesh-scrapers/blob/main/LICENSE)
+[![CI](https://github.com/AtaCanYmc/resumesh-scrapers/actions/workflows/ci.yml/badge.svg)](https://github.com/AtaCanYmc/resumesh-scrapers/actions/workflows/ci.yml)
+
 Standalone, reusable web scraping services for **GitHub**, **Dev.to**, and **Medium** — extracted from the [ResuMesh](https://github.com/AtaCanYmc/ResuMesh) project.
 
 ## Installation
 
-### From local source (development / monorepo)
-
 ```bash
-pip install -e /path/to/resumesh-scrapers
+pip install resumesh-scrapers
 ```
 
-### From the ResuMesh backend
+### Development (editable install)
 
 ```bash
-cd backend
-pip install -e ../../../resumesh-scrapers   # adjust relative path as needed
+git clone https://github.com/AtaCanYmc/resumesh-scrapers.git
+cd resumesh-scrapers
+pip install -e .
 ```
 
 ## Quick Start
@@ -34,7 +38,7 @@ async def main():
     github = GitHubScraperService()
     projects: list[ScrapedProject] = await github.fetch_data(
         "octocat",
-        pat="ghp_...",          # optional
+        pat="ghp_...",          # optional — rate limit 60 → 5000/hour
         include_forks=False,    # default
     )
     for p in projects:
@@ -52,43 +56,6 @@ async def main():
     articles: list[ScrapedArticle] = await medium.fetch_data("atacanymc")
 
 asyncio.run(main())
-```
-
-## Backend Integration (ResuMesh)
-
-### 1. Install the package
-
-```bash
-cd backend
-pip install -e /path/to/resumesh-scrapers
-```
-
-### 2. Update imports in your backend
-
-```python
-# Before (tightly coupled)
-from app.services.scrapers.base import IScraperService
-from app.services.scrapers.exceptions import ScraperError
-from app.services.scrapers.github_scraper import GitHubScraperService
-
-# After (decoupled)
-from resumesh_scrapers import GitHubScraperService, IScraperService
-from resumesh_scrapers.exceptions import ScraperError
-```
-
-### 3. Map scraped data to your DB schemas
-
-```python
-from resumesh_scrapers import GitHubScraperService, ScrapedProject
-from app.schemas.project import ProjectCreate
-
-scraper = GitHubScraperService()
-scraped: list[ScrapedProject] = await scraper.fetch_data("octocat")
-
-# Convert to your backend's schema using model_dump()
-for project in scraped:
-    db_project = ProjectCreate(**project.model_dump())
-    await project_repo.upsert_project(db_project)
 ```
 
 ## Models
@@ -117,6 +84,42 @@ except ScraperError as e:
     print(f"HTTP status: {e.status_code}")  # may be None
 ```
 
+## ResuMesh Backend Integration
+
+### 1. Install
+
+```bash
+pip install resumesh-scrapers
+```
+
+### 2. Update imports
+
+```python
+# Before (tightly coupled)
+from app.services.scrapers.base import IScraperService
+from app.services.scrapers.exceptions import ScraperError
+from app.services.scrapers.github_scraper import GitHubScraperService
+
+# After (decoupled)
+from resumesh_scrapers import GitHubScraperService, IScraperService
+from resumesh_scrapers.exceptions import ScraperError
+```
+
+### 3. Map scraped data to DB schemas
+
+```python
+from resumesh_scrapers import GitHubScraperService, ScrapedProject
+from app.schemas.project import ProjectCreate
+
+scraper = GitHubScraperService()
+scraped: list[ScrapedProject] = await scraper.fetch_data("octocat")
+
+# Convert to your backend's schema using model_dump()
+for project in scraped:
+    db_project = ProjectCreate(**project.model_dump())
+    await project_repo.upsert_project(db_project)
+```
+
 ## License
 
-AGPL-3.0 — see [LICENSE](LICENSE) for details.
+Apache 2.0 — see [LICENSE](LICENSE) for details.
