@@ -46,6 +46,11 @@ jobs:
       - name: Build Package
         run: python -m build
 
+      - name: Verify Build
+        run: |
+          pip install dist/*.whl
+          python -c "from resumesh_scrapers import __version__; print(f'Publishing v{__version__}')"
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
