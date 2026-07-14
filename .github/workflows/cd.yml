@@ -38,7 +38,7 @@ jobs:
           python -c "from resumesh_scrapers import __version__; print(f'Built v{__version__}')"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
