@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.2.0...v0.3.0) (2026-07-23)
+
+
+### Features
+
+* update version to 0.2.0 and add release configuration files ([ec1f271](https://github.com/AtaCanYmc/resumesh-scrapers/commit/ec1f2719bd810e7ac7d867c9e00164b51077134b))
+* update version to 0.3.0 ([e9c8ee3](https://github.com/AtaCanYmc/resumesh-scrapers/commit/e9c8ee3baf7a9eb62150ac1dc5565805aefe7282))
+
 ## [0.2.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.1.0...v0.2.0) (2026-07-23)
 
 
