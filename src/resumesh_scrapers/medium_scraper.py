@@ -24,11 +24,10 @@ import re
 from datetime import datetime, timezone
 
 import feedparser
-import httpx
-from tenacity import retry, stop_after_attempt, wait_exponential
 
 from resumesh_scrapers.base import IScraperService
 from resumesh_scrapers.exceptions import MediumScraperError
+from resumesh_scrapers.http_client import fetch_url
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
 
 logger = logging.getLogger(__name__)
@@ -81,11 +80,6 @@ class MediumScraperService(IScraperService):
             raw_platform_data={"tags": tags},
         )
 
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-        reraise=True,
-    )
     async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
         """
         Fetches the user's articles from Medium RSS feed.
@@ -106,23 +100,13 @@ class MediumScraperService(IScraperService):
         url = _MEDIUM_FEED_BASE.format(username=username)
         logger.info("[MEDIUM] Fetching RSS feed for user=%s", username)
 
-        try:
-            async with httpx.AsyncClient(
-                timeout=_DEFAULT_TIMEOUT, follow_redirects=True
-            ) as client:
-                response = await client.get(url)
-        except httpx.RequestError as exc:
-            raise MediumScraperError(
-                f"Network error while fetching Medium RSS feed: {exc}"
-            ) from exc
-
-        if response.status_code != 200:
-            raise MediumScraperError(
-                "Medium RSS returned HTTP "
-                f"{response.status_code} for user '{username}'."
-                f" Response: {response.text[:300]}",
-                status_code=response.status_code,
-            )
+        response = await fetch_url(
+            url=url,
+            timeout=_DEFAULT_TIMEOUT,
+            follow_redirects=True,
+            error_class=MediumScraperError,
+            platform_name="MEDIUM",
+        )
 
         feed = feedparser.parse(response.text)
 

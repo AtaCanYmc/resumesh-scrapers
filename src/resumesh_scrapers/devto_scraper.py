@@ -25,11 +25,9 @@ import logging
 import re
 from datetime import datetime, timezone
 
-import httpx
-from tenacity import retry, stop_after_attempt, wait_exponential
-
 from resumesh_scrapers.base import IScraperService
 from resumesh_scrapers.exceptions import DevToScraperError
+from resumesh_scrapers.http_client import fetch_url
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
 
 logger = logging.getLogger(__name__)
@@ -99,11 +97,6 @@ class DevToScraperService(IScraperService):
             raw_platform_data=raw,
         )
 
-    @retry(
-        stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-        reraise=True,
-    )
     async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
         api_key = kwargs.get("api_key")
         """
@@ -131,21 +124,13 @@ class DevToScraperService(IScraperService):
 
         logger.info("[DEV_TO] Fetching articles for user=%s", username)
 
-        try:
-            async with httpx.AsyncClient(timeout=_DEFAULT_TIMEOUT) as client:
-                response = await client.get(url, headers=headers)
-        except httpx.RequestError as exc:
-            raise DevToScraperError(
-                f"Network error while fetching Dev.to articles: {exc}"
-            ) from exc
-
-        if response.status_code != 200:
-            raise DevToScraperError(
-                "Dev.to API returned HTTP "
-                f"{response.status_code} for user '{username}'."
-                f" Response: {response.text[:300]}",
-                status_code=response.status_code,
-            )
+        response = await fetch_url(
+            url=url,
+            headers=headers,
+            timeout=_DEFAULT_TIMEOUT,
+            error_class=DevToScraperError,
+            platform_name="DEV_TO",
+        )
 
         raw_articles: list[dict] = response.json()
         logger.info(
