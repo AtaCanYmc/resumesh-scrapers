@@ -78,7 +78,7 @@ class BehanceScraperService(IScraperService):
 
             for card in project_cards:
                 try:
-                    title_elem = card.select_one("a.projekt-link, [class*='Title'], h3")
+                    title_elem = card.select_one("a.projekt-link, [class*='Title'], [class*='title'], h3")
                     title = (
                         title_elem.get_text(strip=True)
                         if title_elem
@@ -100,7 +100,7 @@ class BehanceScraperService(IScraperService):
                     # Extract appreciations/likes stats if available
                     appreciations = 0
                     appr_elem = card.select_one(
-                        "[class*='Appreciations'], [class*='Stat--appreciations']"
+                        "[class*='Appreciations'], [class*='appreciations'], [class*='Stat--appreciations']"
                     )
                     if appr_elem:
                         nums = re.findall(r"\d+", appr_elem.get_text())
