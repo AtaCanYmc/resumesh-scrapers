@@ -16,16 +16,10 @@ SAMPLE_PYPI_RESPONSE = {
         "summary": "Standalone web scraping services",
         "home_page": "https://github.com/AtaCanYmc/resumesh-scrapers",
         "author": "Ata Can Yaymacı",
-        "downloads": {
-            "last_day": 10,
-            "last_week": 50,
-            "last_month": 200
-        }
+        "downloads": {"last_day": 10, "last_week": 50, "last_month": 200},
     },
     "last_serial": 123456,
-    "ownership": {
-        "roles": [{"role": "Owner", "user": "atacanymc"}]
-    },
+    "ownership": {"roles": [{"role": "Owner", "user": "atacanymc"}]},
     "releases": {
         "0.1.0": [
             {
@@ -40,12 +34,12 @@ SAMPLE_PYPI_RESPONSE = {
                 "md5_digest": "def",
                 "packagetype": "bdist_wheel",
                 "python_version": "py3",
-                "yanked": False
+                "yanked": False,
             }
         ]
     },
     "urls": [],
-    "vulnerabilities": []
+    "vulnerabilities": [],
 }
 
 
@@ -61,7 +55,9 @@ class TestPyPIScraperFetchData:
         respx.get("https://pypi.org/pypi/resumesh-scrapers/json").mock(
             return_value=Response(200, json=SAMPLE_PYPI_RESPONSE)
         )
-        packages = await scraper.fetch_data("atacanymc", package_names=["resumesh-scrapers"])
+        packages = await scraper.fetch_data(
+            "atacanymc", package_names=["resumesh-scrapers"]
+        )
         assert len(packages) == 1
         assert all(isinstance(p, PyPiPackageModel) for p in packages)
         assert packages[0].info.name == "resumesh-scrapers"
@@ -88,5 +84,7 @@ class TestPyPIScraperFetchData:
         respx.get("https://pypi.org/pypi/resumesh-scrapers/json").mock(
             side_effect=httpx.ConnectError("timeout")
         )
-        packages = await scraper.fetch_data("atacanymc", package_names=["resumesh-scrapers"])
+        packages = await scraper.fetch_data(
+            "atacanymc", package_names=["resumesh-scrapers"]
+        )
         assert packages == []

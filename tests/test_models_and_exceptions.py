@@ -8,7 +8,11 @@ from resumesh_scrapers.exceptions import (
     MediumScraperError,
     ScraperError,
 )
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, GitHubRepositoryModel
+from resumesh_scrapers.models import (
+    ArticlePlatform,
+    ScrapedArticle,
+    GitHubRepositoryModel,
+)
 
 
 # ── Models ──────────────────────────────────────────────────────────────────
@@ -30,7 +34,7 @@ class TestScrapedProject:
             url="https://github.com/ResuMesh/ResuMesh",
             description="ResuMesh",
             stargazers_count=42,
-            language="Python"
+            language="Python",
         )
         assert project.stargazers_count == 42
         assert project.language == "Python"

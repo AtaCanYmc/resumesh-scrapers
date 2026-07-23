@@ -20,18 +20,14 @@ SAMPLE_NPM_RESPONSE = {
                 "keywords": ["scraper", "python"],
                 "links": {
                     "npm": "https://www.npmjs.com/package/resumesh-scrapers",
-                    "repository": "https://github.com/AtaCanYmc/resumesh-scrapers"
+                    "repository": "https://github.com/AtaCanYmc/resumesh-scrapers",
                 },
-                "publisher": {
-                    "username": "atacanymc"
-                }
+                "publisher": {"username": "atacanymc"},
             },
-            "score": {
-                "final": 0.95
-            }
+            "score": {"final": 0.95},
         }
     ],
-    "total": 1
+    "total": 1,
 }
 
 

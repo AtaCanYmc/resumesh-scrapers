@@ -6,7 +6,10 @@ import respx
 from httpx import Response
 
 from resumesh_scrapers.exceptions import ScraperError
-from resumesh_scrapers.platforms.behance import BehanceScraperService, BehanceScraperError
+from resumesh_scrapers.platforms.behance import (
+    BehanceScraperService,
+    BehanceScraperError,
+)
 from resumesh_scrapers.models import BehanceProjectModel
 
 SAMPLE_BEHANCE_HTML = """
@@ -49,7 +52,10 @@ class TestBehanceScraperFetchData:
         assert len(projects) == 2
         assert all(isinstance(p, BehanceProjectModel) for p in projects)
         assert projects[0].name == "My Awesome Design"
-        assert str(projects[0].url) == "https://www.behance.net/gallery/12345/My-Awesome-Design"
+        assert (
+            str(projects[0].url)
+            == "https://www.behance.net/gallery/12345/My-Awesome-Design"
+        )
         assert projects[0].stats_appreciations == 150
         assert projects[1].name == "Second Art"
         assert projects[1].stats_appreciations == 42
