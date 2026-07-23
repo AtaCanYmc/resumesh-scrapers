@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
-from resumesh_scrapers.platforms import DevToScraperService
 from resumesh_scrapers.exceptions import DevToScraperError
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms import DevToScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -43,9 +42,7 @@ class TestDevToScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_success(self, scraper):
-        respx.get("https://dev.to/api/articles").mock(
-            return_value=Response(200, json=SAMPLE_ARTICLES)
-        )
+        respx.get("https://dev.to/api/articles").mock(return_value=Response(200, json=SAMPLE_ARTICLES))
 
         articles = await scraper.fetch_data("atacanymc")
 
@@ -58,9 +55,7 @@ class TestDevToScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_empty(self, scraper):
-        respx.get("https://dev.to/api/articles").mock(
-            return_value=Response(200, json=[])
-        )
+        respx.get("https://dev.to/api/articles").mock(return_value=Response(200, json=[]))
 
         articles = await scraper.fetch_data("atacanymc")
         assert articles == []
@@ -68,9 +63,7 @@ class TestDevToScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_http_error(self, scraper):
-        respx.get("https://dev.to/api/articles").mock(
-            return_value=Response(500, text="Internal Server Error")
-        )
+        respx.get("https://dev.to/api/articles").mock(return_value=Response(500, text="Internal Server Error"))
 
         with pytest.raises(DevToScraperError) as exc_info:
             await scraper.fetch_data("atacanymc")
@@ -80,9 +73,7 @@ class TestDevToScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_network_error(self, scraper):
-        respx.get("https://dev.to/api/articles").mock(
-            side_effect=httpx.ConnectError("timeout")
-        )
+        respx.get("https://dev.to/api/articles").mock(side_effect=httpx.ConnectError("timeout"))
 
         with pytest.raises(DevToScraperError, match="Network error"):
             await scraper.fetch_data("atacanymc")
@@ -100,9 +91,7 @@ class TestDevToScraperFetchData:
             {"id": 999},  # missing required 'title' and 'url'
             SAMPLE_ARTICLES[0],
         ]
-        respx.get("https://dev.to/api/articles").mock(
-            return_value=Response(200, json=bad_articles)
-        )
+        respx.get("https://dev.to/api/articles").mock(return_value=Response(200, json=bad_articles))
 
         articles = await scraper.fetch_data("atacanymc")
         assert len(articles) == 1

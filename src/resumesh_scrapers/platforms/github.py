@@ -21,10 +21,10 @@ API Reference:
 import logging
 import re
 
-from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import GitHubScraperError
 from resumesh_scrapers.models import GitHubRepositoryModel
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,7 @@ class GitHubScraperService(IScraperService):
     Service that fetches repository data using the GitHub REST API.
     """
 
+    @staticmethod
     def _build_headers(pat: str | None = None) -> dict[str, str]:
         """
         Creates HTTP headers for GitHub API.
@@ -101,10 +102,7 @@ class GitHubScraperService(IScraperService):
         if not re.match(r"^[a-zA-Z0-9\-]+$", username):
             raise GitHubScraperError("Invalid GitHub username format.")
 
-        url = (
-            f"{_GITHUB_API_BASE}/users/{username}/repos"
-            f"?per_page={_DEFAULT_PER_PAGE}&sort=updated"
-        )
+        url = f"{_GITHUB_API_BASE}/users/{username}/repos" f"?per_page={_DEFAULT_PER_PAGE}&sort=updated"
         headers = GitHubScraperService._build_headers(pat)
 
         logger.info("[GITHUB] Fetching repos for user=%s", username)

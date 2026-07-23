@@ -20,10 +20,10 @@ from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
 
-from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import ScraperError
 from resumesh_scrapers.models import BehanceProjectModel
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -78,21 +78,11 @@ class BehanceScraperService(IScraperService):
 
             for card in project_cards:
                 try:
-                    title_elem = card.select_one(
-                        "a.projekt-link, [class*='Title'], [class*='title'], h3"
-                    )
-                    title = (
-                        title_elem.get_text(strip=True)
-                        if title_elem
-                        else "Untitled Project"
-                    )
+                    title_elem = card.select_one("a.projekt-link, [class*='Title'], [class*='title'], h3")
+                    title = title_elem.get_text(strip=True) if title_elem else "Untitled Project"
 
                     link_elem = card.select_one("a[href*='/gallery/']")
-                    project_url = (
-                        link_elem["href"]
-                        if link_elem and link_elem.has_attr("href")
-                        else None
-                    )
+                    project_url = link_elem["href"] if link_elem and link_elem.has_attr("href") else None
                     if project_url and not project_url.startswith("http"):
                         project_url = f"https://www.behance.net{project_url}"
 

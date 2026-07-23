@@ -21,10 +21,10 @@ from datetime import datetime, timezone
 
 import feedparser
 
-from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import SubstackScraperError
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,8 @@ class SubstackScraperService(IScraperService):
 
         # Convert publish date to UTC datetime
         if entry.get("published_parsed"):
-            published_at = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+            p = entry.published_parsed
+            published_at = datetime(p[0], p[1], p[2], p[3], p[4], p[5], tzinfo=timezone.utc)
         else:
             published_at = datetime.now(timezone.utc)
             logger.debug(
@@ -80,7 +81,8 @@ class SubstackScraperService(IScraperService):
             raw_platform_data={"tags": tags},
         )
 
-    async def fetch_data(self, publication: str, **kwargs) -> list[ScrapedArticle]:
+    async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
+        publication = username
         """
         Fetches the publication's articles from Substack RSS feed.
 
@@ -137,9 +139,7 @@ class SubstackScraperService(IScraperService):
                     exc,
                 )
 
-        logger.info(
-            "[SUBSTACK] Parsed %d articles for publication=%s", len(articles), clean_pub
-        )
+        logger.info("[SUBSTACK] Parsed %d articles for publication=%s", len(articles), clean_pub)
         return articles
 
 

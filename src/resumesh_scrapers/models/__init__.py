@@ -1,6 +1,10 @@
 from resumesh_scrapers.models.article import ArticlePlatform, ScrapedArticle
 from resumesh_scrapers.models.behance import BehanceProjectModel
-from resumesh_scrapers.models.github import GitHubLicense, GitHubOwner, GitHubRepositoryModel
+from resumesh_scrapers.models.github import (
+    GitHubLicense,
+    GitHubOwner,
+    GitHubRepositoryModel,
+)
 from resumesh_scrapers.models.npm import (
     NpmDownloads,
     NpmFlags,

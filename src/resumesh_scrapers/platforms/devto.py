@@ -25,10 +25,10 @@ import logging
 import re
 from datetime import datetime, timezone
 
-from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import DevToScraperError
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +42,7 @@ class DevToScraperService(IScraperService):
     Service that fetches article data using the Dev.to REST API.
     """
 
+    @staticmethod
     def _build_headers(api_key: str | None = None) -> dict[str, str]:
         """
         Creates HTTP headers for Dev.to API.
@@ -75,9 +76,7 @@ class DevToScraperService(IScraperService):
         published_at: datetime | None = None
         if raw.get("published_at"):
             try:
-                published_at = datetime.strptime(
-                    raw["published_at"], "%Y-%m-%dT%H:%M:%SZ"
-                ).replace(tzinfo=timezone.utc)
+                published_at = datetime.strptime(raw["published_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
             except ValueError:
                 # Some dates may have milliseconds or timezone offset
                 logger.debug(
@@ -116,10 +115,7 @@ class DevToScraperService(IScraperService):
         if not re.match(r"^[a-zA-Z0-9\-]+$", username):
             raise DevToScraperError("Invalid DevTo username format.")
 
-        url = (
-            f"{_DEVTO_API_BASE}/articles"
-            f"?username={username}&per_page={_DEFAULT_PER_PAGE}"
-        )
+        url = f"{_DEVTO_API_BASE}/articles" f"?username={username}&per_page={_DEFAULT_PER_PAGE}"
         headers = DevToScraperService._build_headers(api_key)
 
         logger.info("[DEV_TO] Fetching articles for user=%s", username)
@@ -133,9 +129,7 @@ class DevToScraperService(IScraperService):
         )
 
         raw_articles: list[dict] = response.json()
-        logger.info(
-            "[DEV_TO] Received %d articles for user=%s", len(raw_articles), username
-        )
+        logger.info("[DEV_TO] Received %d articles for user=%s", len(raw_articles), username)
 
         articles: list[ScrapedArticle] = []
         for raw in raw_articles:

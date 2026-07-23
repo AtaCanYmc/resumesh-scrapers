@@ -18,16 +18,14 @@ import logging
 import re
 from typing import List
 
+from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import NpmScraperError
 from resumesh_scrapers.models import NpmSearchResultModel
 from resumesh_scrapers.platforms.base import IScraperService
-from resumesh_scrapers.core.client import fetch_url
 
 logger = logging.getLogger(__name__)
 
-_NPM_SEARCH_URL = (
-    "https://registry.npmjs.org/-/v1/search?text=maintainer:{username}&size=100&from=0"
-)
+_NPM_SEARCH_URL = "https://registry.npmjs.org/-/v1/search?text=maintainer:{username}&size=100&from=0"
 _DEFAULT_TIMEOUT = 15.0
 
 
@@ -67,13 +65,9 @@ class NpmScraperService(IScraperService):
         try:
             data = response.json()
         except Exception as exc:
-            raise NpmScraperError(
-                f"Failed to parse JSON response from npm registry: {exc}"
-            )
+            raise NpmScraperError(f"Failed to parse JSON response from npm registry: {exc}")
 
-        logger.info(
-            "[NPM] Received response from npm search for maintainer=%s", clean_user
-        )
+        logger.info("[NPM] Received response from npm search for maintainer=%s", clean_user)
 
         try:
             result_model = NpmSearchResultModel.model_validate(data)

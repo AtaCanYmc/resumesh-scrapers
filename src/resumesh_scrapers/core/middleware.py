@@ -1,19 +1,19 @@
 import logging
-from typing import Callable, Any
+from typing import Any, Callable
+
 from tenacity import (
     retry,
+    retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
-    retry_if_exception_type,
 )
+
 from resumesh_scrapers.exceptions import NetworkError, RateLimitError
 
 logger = logging.getLogger(__name__)
 
 
-def create_retry_decorator(
-    max_attempts: int = 3, min_wait: float = 2.0, max_wait: float = 10.0
-) -> Callable:
+def create_retry_decorator(max_attempts: int = 3, min_wait: float = 2.0, max_wait: float = 10.0) -> Callable:
     """
     Geçici ağ hatalarında veya rate-limit durumlarında kullanılmak üzere
     üstel artan bekleme (exponential backoff) süreli bir retry decorator üretir.
@@ -48,7 +48,5 @@ class RequestMiddleware:
         try:
             return wrapped_func(*args, **kwargs)
         except Exception as e:
-            logger.error(
-                f"İstek maksimum deneme sınırına ulaştı ve başarısız oldu: {e}"
-            )
+            logger.error(f"İstek maksimum deneme sınırına ulaştı ve başarısız oldu: {e}")
             raise

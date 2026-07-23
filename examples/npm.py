@@ -1,5 +1,6 @@
 import asyncio
 import logging
+
 from resumesh_scrapers.exceptions import ScraperError
 from resumesh_scrapers.platforms.npm import NpmScraper
 

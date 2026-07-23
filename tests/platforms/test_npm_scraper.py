@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
 from resumesh_scrapers.exceptions import ScraperError
-from resumesh_scrapers.platforms import NpmScraperService
 from resumesh_scrapers.models import NpmSearchResultModel
+from resumesh_scrapers.platforms import NpmScraperService
 
 # Mock data simulating npm registry search response
 SAMPLE_NPM_RESPONSE = {
@@ -40,9 +39,7 @@ class TestNpmScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_packages_success(self, scraper):
-        respx.get("https://registry.npmjs.org/-/v1/search").mock(
-            return_value=Response(200, json=SAMPLE_NPM_RESPONSE)
-        )
+        respx.get("https://registry.npmjs.org/-/v1/search").mock(return_value=Response(200, json=SAMPLE_NPM_RESPONSE))
         packages = await scraper.fetch_data("atacanymc")
         assert len(packages) == 1
         assert all(isinstance(p, NpmSearchResultModel) for p in packages)
@@ -60,9 +57,7 @@ class TestNpmScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_packages_http_error(self, scraper):
-        respx.get("https://registry.npmjs.org/-/v1/search").mock(
-            return_value=Response(500, text="Registry Error")
-        )
+        respx.get("https://registry.npmjs.org/-/v1/search").mock(return_value=Response(500, text="Registry Error"))
         with pytest.raises(ScraperError) as exc_info:
             await scraper.fetch_data("atacanymc")
         assert exc_info.value.status_code == 500
@@ -70,9 +65,7 @@ class TestNpmScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_packages_network_error(self, scraper):
-        respx.get("https://registry.npmjs.org/-/v1/search").mock(
-            side_effect=httpx.ConnectError("connection timeout")
-        )
+        respx.get("https://registry.npmjs.org/-/v1/search").mock(side_effect=httpx.ConnectError("connection timeout"))
         with pytest.raises(ScraperError, match="Network error"):
             await scraper.fetch_data("atacanymc")
 

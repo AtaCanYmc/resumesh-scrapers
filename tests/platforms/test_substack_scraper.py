@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
 from resumesh_scrapers.exceptions import SubstackScraperError
-from resumesh_scrapers.platforms.substack import SubstackScraperService
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms.substack import SubstackScraperService
 
 SAMPLE_SUBSTACK_FEED = """\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -43,9 +42,7 @@ class TestSubstackScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_success(self, scraper):
-        respx.get("https://atacan.substack.com/feed").mock(
-            return_value=Response(200, text=SAMPLE_SUBSTACK_FEED)
-        )
+        respx.get("https://atacan.substack.com/feed").mock(return_value=Response(200, text=SAMPLE_SUBSTACK_FEED))
 
         articles = await scraper.fetch_data("atacan")
 
@@ -58,9 +55,7 @@ class TestSubstackScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_http_error(self, scraper):
-        respx.get("https://atacan.substack.com/feed").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://atacan.substack.com/feed").mock(return_value=Response(404, text="Not Found"))
 
         with pytest.raises(SubstackScraperError) as exc_info:
             await scraper.fetch_data("@atacan")  # testing strip '@' as well
@@ -69,9 +64,7 @@ class TestSubstackScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_network_error(self, scraper):
-        respx.get("https://atacan.substack.com/feed").mock(
-            side_effect=httpx.ConnectError("dns lookup failure")
-        )
+        respx.get("https://atacan.substack.com/feed").mock(side_effect=httpx.ConnectError("dns lookup failure"))
 
         with pytest.raises(SubstackScraperError, match="Network error"):
             await scraper.fetch_data("atacan")

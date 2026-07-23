@@ -7,11 +7,13 @@ Usage:
     raise GitHubScraperError("API rate limit exceeded", status_code=403)
 """
 
+from typing import Optional
+
 
 class ScraperError(Exception):
     """Base exception for all scraper services."""
 
-    def __init__(self, message: str, status_code: int | None = None):
+    def __init__(self, message: str, status_code: Optional[int] = None):
         super().__init__(message)
         self.status_code = status_code
         self.message = message
@@ -25,62 +27,49 @@ class ScraperError(Exception):
 class GitHubScraperError(ScraperError):
     """Raised when the GitHub API returns an error or unexpected response."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
-        self.message = message
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class MediumScraperError(ScraperError):
     """Raised when the Medium RSS feed cannot be fetched or parsed."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
-        self.message = message
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class DevToScraperError(ScraperError):
     """Raised when the Dev.to API returns an error or unexpected response."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class SubstackScraperError(ScraperError):
     """Raised when the Substack RSS feed cannot be fetched or parsed."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
-        self.message = message
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class NpmScraperError(ScraperError):
     """Raised when the npm registry API returns an error or unexpected response."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
-        self.message = message
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class PyPIScraperError(ScraperError):
     """Raised when the PyPI API returns an error or unexpected response."""
 
-    def __init__(self, message: str, status_code: int | None = None):
-        super().__init__(message)
-        self.status_code = status_code
-        self.message = message
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
 
 
 class NetworkError(ScraperError):
     """Raised during network connectivity issues, timeouts, or HTTP connection errors."""
 
-    def __init__(
-        self, message: str = "An error occurred during the network connection."
-    ):
+    def __init__(self, message: str = "An error occurred during the network connection."):
         super().__init__(message)
         self.message = message
         self.status_code = 500
@@ -98,9 +87,7 @@ class RateLimitError(ScraperError):
 class ParsingError(ScraperError):
     """Raised when the structure breaks during HTML parsing or data configuration processes."""
 
-    def __init__(
-        self, message: str = "An error occurred while processing or parsing data."
-    ):
+    def __init__(self, message: str = "An error occurred while processing or parsing data."):
         super().__init__(message)
         self.message = message
         self.status_code = 500

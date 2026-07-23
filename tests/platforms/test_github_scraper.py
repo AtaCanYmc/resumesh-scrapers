@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.platforms import GitHubScraperService
 from resumesh_scrapers.models import GitHubRepositoryModel
+from resumesh_scrapers.platforms import GitHubScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -60,9 +59,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_success(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=SAMPLE_REPOS)
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=SAMPLE_REPOS))
 
         projects = await scraper.fetch_data("octocat")
 
@@ -75,9 +72,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_include_forks(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=SAMPLE_REPOS)
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=SAMPLE_REPOS))
 
         projects = await scraper.fetch_data("octocat", include_forks=True)
 
@@ -86,9 +81,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_empty(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=[])
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=[]))
 
         projects = await scraper.fetch_data("octocat")
         assert projects == []
@@ -96,9 +89,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_http_error(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(404, text="Not Found"))
 
         with pytest.raises(GitHubScraperError) as exc_info:
             await scraper.fetch_data("octocat")
@@ -123,9 +114,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_repo_without_language(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=[SAMPLE_REPOS[2]])
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=[SAMPLE_REPOS[2]]))
 
         projects = await scraper.fetch_data("octocat")
         assert projects[0].languages == []

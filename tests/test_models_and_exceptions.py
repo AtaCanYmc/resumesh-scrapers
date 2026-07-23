@@ -1,7 +1,6 @@
 """Tests for Pydantic models and exception hierarchy."""
 
 import pytest
-
 from resumesh_scrapers.exceptions import (
     DevToScraperError,
     GitHubScraperError,
@@ -10,10 +9,9 @@ from resumesh_scrapers.exceptions import (
 )
 from resumesh_scrapers.models import (
     ArticlePlatform,
-    ScrapedArticle,
     GitHubRepositoryModel,
+    ScrapedArticle,
 )
-
 
 # ── Models ──────────────────────────────────────────────────────────────────
 

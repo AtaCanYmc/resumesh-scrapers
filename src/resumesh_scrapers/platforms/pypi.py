@@ -19,10 +19,10 @@ import logging
 import re
 from typing import List
 
-from resumesh_scrapers.exceptions import PyPIScraperError
-from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
+from resumesh_scrapers.exceptions import PyPIScraperError
 from resumesh_scrapers.models import PyPiPackageModel
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -60,9 +60,7 @@ class PyPIScraperService(IScraperService):
         projects: List[PyPiPackageModel] = []
         for pkg_name in package_names:
             if not re.match(r"^[a-zA-Z0-9\-_]+$", pkg_name):
-                logger.warning(
-                    "[PYPI] Skipping invalid package name format: %s", pkg_name
-                )
+                logger.warning("[PYPI] Skipping invalid package name format: %s", pkg_name)
                 continue
 
             url = _PYPI_API_BASE.format(package_name=pkg_name)
