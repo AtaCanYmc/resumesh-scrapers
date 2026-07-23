@@ -7,7 +7,7 @@ from httpx import Response
 
 from resumesh_scrapers.exceptions import GitHubScraperError
 from resumesh_scrapers.platforms import GitHubScraperService
-from resumesh_scrapers.models import ScrapedProject
+from resumesh_scrapers.models import GitHubRepositoryModel
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -67,10 +67,10 @@ class TestGitHubScraperFetchData:
         projects = await scraper.fetch_data("octocat")
 
         assert len(projects) == 2  # fork excluded
-        assert all(isinstance(p, ScrapedProject) for p in projects)
-        assert projects[0].title == "ResuMesh"
-        assert projects[0].stars == 42
-        assert projects[0].languages == ["Python"]
+        assert all(isinstance(p, GitHubRepositoryModel) for p in projects)
+        assert projects[0].name == "ResuMesh"
+        assert projects[0].stargazers_count == 42
+        assert projects[0].language == "Python"
 
     @respx.mock
     @pytest.mark.asyncio
