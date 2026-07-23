@@ -79,10 +79,18 @@ class BehanceScraperService(IScraperService):
             for card in project_cards:
                 try:
                     title_elem = card.select_one("a.projekt-link, [class*='Title'], h3")
-                    title = title_elem.get_text(strip=True) if title_elem else "Untitled Project"
+                    title = (
+                        title_elem.get_text(strip=True)
+                        if title_elem
+                        else "Untitled Project"
+                    )
 
                     link_elem = card.select_one("a[href*='/gallery/']")
-                    project_url = link_elem["href"] if link_elem and link_elem.has_attr("href") else None
+                    project_url = (
+                        link_elem["href"]
+                        if link_elem and link_elem.has_attr("href")
+                        else None
+                    )
                     if project_url and not project_url.startswith("http"):
                         project_url = f"https://www.behance.net{project_url}"
 
@@ -91,7 +99,9 @@ class BehanceScraperService(IScraperService):
 
                     # Extract appreciations/likes stats if available
                     appreciations = 0
-                    appr_elem = card.select_one("[class*='Appreciations'], [class*='Stat--appreciations']")
+                    appr_elem = card.select_one(
+                        "[class*='Appreciations'], [class*='Stat--appreciations']"
+                    )
                     if appr_elem:
                         nums = re.findall(r"\d+", appr_elem.get_text())
                         if nums:
@@ -112,7 +122,11 @@ class BehanceScraperService(IScraperService):
                     )
                     continue
 
-            logger.info("[BEHANCE] Successfully parsed %d projects for user=%s", len(projects), clean_user)
+            logger.info(
+                "[BEHANCE] Successfully parsed %d projects for user=%s",
+                len(projects),
+                clean_user,
+            )
             return projects
 
         except Exception as exc:

@@ -22,14 +22,14 @@ from resumesh_scrapers.exceptions import (
     ScraperError,
     NetworkError,
     RateLimitError,
-    ParsingError
+    ParsingError,
 )
 from resumesh_scrapers.models import (
     ArticlePlatform,
     ScrapedArticle,
     GitHubRepositoryModel,
     PyPiPackageModel,
-    NpmSearchResultModel
+    NpmSearchResultModel,
 )
 from resumesh_scrapers.platforms import (
     IScraperService,

@@ -137,7 +137,9 @@ class SubstackScraperService(IScraperService):
                     exc,
                 )
 
-        logger.info("[SUBSTACK] Parsed %d articles for publication=%s", len(articles), clean_pub)
+        logger.info(
+            "[SUBSTACK] Parsed %d articles for publication=%s", len(articles), clean_pub
+        )
         return articles
 
 

@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 
 class ArticlePlatform(str, Enum):
     """Supported article platforms."""
+
     MEDIUM = "MEDIUM"
     DEV_TO = "DEV_TO"
     SUBSTACK = "SUBSTACK"
@@ -27,6 +28,7 @@ class ScrapedArticle(BaseModel):
     ``app.schemas.article.ArticleCreate`` but carries no
     FastAPI or SQLAlchemy dependency.
     """
+
     title: str
     summary: Optional[str] = None
     url: HttpUrl
@@ -38,6 +40,7 @@ class ScrapedArticle(BaseModel):
 
 class GitHubOwner(BaseModel):
     """Represents the owner details of a GitHub repository."""
+
     login: str
     id: int
     node_id: str
@@ -49,6 +52,7 @@ class GitHubOwner(BaseModel):
 
 class GitHubLicense(BaseModel):
     """Represents repository license information."""
+
     key: str
     name: str
     spdx_id: Optional[str] = None
@@ -57,6 +61,7 @@ class GitHubLicense(BaseModel):
 
 class GitHubRepositoryModel(BaseModel):
     """Pydantic model for raw repository data fetched by the GitHub scraper."""
+
     id: Optional[int] = None
     node_id: Optional[str] = None
     name: str
@@ -88,6 +93,7 @@ class GitHubRepositoryModel(BaseModel):
 
 class BehanceProjectModel(BaseModel):
     """Pydantic model for raw project data fetched or parsed from Behance."""
+
     id: Optional[str] = None
     name: str
     url: HttpUrl

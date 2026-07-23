@@ -51,13 +51,18 @@ class PyPIScraperService(IScraperService):
         """
         package_names = kwargs.get("package_names", [])
         if not package_names:
-            logger.warning("[PYPI] No package_names provided for user=%s. Returning empty list.", username)
+            logger.warning(
+                "[PYPI] No package_names provided for user=%s. Returning empty list.",
+                username,
+            )
             return []
 
         projects: List[PyPiPackageModel] = []
         for pkg_name in package_names:
             if not re.match(r"^[a-zA-Z0-9\-_]+$", pkg_name):
-                logger.warning("[PYPI] Skipping invalid package name format: %s", pkg_name)
+                logger.warning(
+                    "[PYPI] Skipping invalid package name format: %s", pkg_name
+                )
                 continue
 
             url = _PYPI_API_BASE.format(package_name=pkg_name)
@@ -76,7 +81,11 @@ class PyPIScraperService(IScraperService):
             except Exception as exc:
                 logger.warning("[PYPI] Failed to fetch package '%s': %s", pkg_name, exc)
 
-        logger.info("[PYPI] Successfully parsed %d packages for user=%s", len(projects), username)
+        logger.info(
+            "[PYPI] Successfully parsed %d packages for user=%s",
+            len(projects),
+            username,
+        )
         return projects
 
 

@@ -1,15 +1,18 @@
 import logging
 from typing import Callable, Any
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 from resumesh_scrapers.exceptions import NetworkError, RateLimitError
 
 logger = logging.getLogger(__name__)
 
 
 def create_retry_decorator(
-        max_attempts: int = 3,
-        min_wait: float = 2.0,
-        max_wait: float = 10.0
+    max_attempts: int = 3, min_wait: float = 2.0, max_wait: float = 10.0
 ) -> Callable:
     """
     Geçici ağ hatalarında veya rate-limit durumlarında kullanılmak üzere
@@ -23,7 +26,7 @@ def create_retry_decorator(
             f"İşlem başarısız oldu. {retry_state.next_action.sleep} saniye sonra "
             f"yeniden deneniyor... (Deneme: {retry_state.attempt_number}/{max_attempts})"
         ),
-        reraise=True
+        reraise=True,
     )
 
 
@@ -45,5 +48,7 @@ class RequestMiddleware:
         try:
             return wrapped_func(*args, **kwargs)
         except Exception as e:
-            logger.error(f"İstek maksimum deneme sınırına ulaştı ve başarısız oldu: {e}")
+            logger.error(
+                f"İstek maksimum deneme sınırına ulaştı ve başarısız oldu: {e}"
+            )
             raise

@@ -78,7 +78,9 @@ class PyPIScraperError(ScraperError):
 class NetworkError(ScraperError):
     """Raised during network connectivity issues, timeouts, or HTTP connection errors."""
 
-    def __init__(self, message: str = "An error occurred during the network connection."):
+    def __init__(
+        self, message: str = "An error occurred during the network connection."
+    ):
         super().__init__(message)
         self.message = message
         self.status_code = 500
@@ -96,7 +98,9 @@ class RateLimitError(ScraperError):
 class ParsingError(ScraperError):
     """Raised when the structure breaks during HTML parsing or data configuration processes."""
 
-    def __init__(self, message: str = "An error occurred while processing or parsing data."):
+    def __init__(
+        self, message: str = "An error occurred while processing or parsing data."
+    ):
         super().__init__(message)
         self.message = message
         self.status_code = 500
