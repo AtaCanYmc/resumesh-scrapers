@@ -1,16 +1,3 @@
-"""
-resumesh-scrapers
-=================
-Standalone, reusable web scraping services for GitHub, Dev.to, and Medium.
-
-Quick start::
-
-    from resumesh_scrapers import GitHubScraperService, ScrapedProject
-
-    scraper = GitHubScraperService()
-    projects: list[ScrapedProject] = await scraper.fetch_data("octocat")
-"""
-
 from resumesh_scrapers._version import __version__
 from resumesh_scrapers.exceptions import (
     DevToScraperError,
@@ -27,6 +14,9 @@ from resumesh_scrapers.exceptions import (
 from resumesh_scrapers.models import (
     ArticlePlatform,
     ScrapedArticle,
+    BehanceProjectModel,
+    GitHubLicense,
+    GitHubOwner,
     GitHubRepositoryModel,
     PyPiPackageModel,
     NpmSearchResultModel,
@@ -39,6 +29,14 @@ from resumesh_scrapers.platforms import (
     GitHubScraperService,
     MediumScraper,
     MediumScraperService,
+    BehanceScraper,
+    BehanceScraperService,
+    SubstackScraper,
+    SubstackScraperService,
+    NpmScraper,
+    NpmScraperService,
+    PyPIScraper,
+    PyPIScraperService,
 )
 
 __all__ = [
@@ -52,10 +50,21 @@ __all__ = [
     "DevToScraper",
     "MediumScraperService",
     "MediumScraper",
+    "BehanceScraper",
+    "BehanceScraperService",
+    "SubstackScraper",
+    "SubstackScraperService",
+    "NpmScraper",
+    "NpmScraperService",
+    "PyPIScraper",
+    "PyPIScraperService",
     # Models
+    "GitHubOwner",
+    "GitHubLicense",
     "GitHubRepositoryModel",
     "ScrapedArticle",
     "ArticlePlatform",
+    "BehanceProjectModel",
     "PyPiPackageModel",
     "NpmSearchResultModel",
     # Exceptions
@@ -63,6 +72,10 @@ __all__ = [
     "GitHubScraperError",
     "DevToScraperError",
     "MediumScraperError",
+    "SubstackScraperError",
     "NpmScraperError",
     "PyPIScraperError",
+    "NetworkError",
+    "RateLimitError",
+    "ParsingError",
 ]
