@@ -6,7 +6,7 @@ import respx
 from httpx import Response
 
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.medium_scraper import MediumScraperService
+from resumesh_scrapers.platforms import MediumScraperService
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
 
 # ── Fixtures ────────────────────────────────────────────────────────────────

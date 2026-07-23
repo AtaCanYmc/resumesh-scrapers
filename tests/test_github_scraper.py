@@ -6,7 +6,7 @@ import respx
 from httpx import Response
 
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.github_scraper import GitHubScraperService
+from resumesh_scrapers.platforms import GitHubScraperService
 from resumesh_scrapers.models import ScrapedProject
 
 # ── Fixtures ────────────────────────────────────────────────────────────────

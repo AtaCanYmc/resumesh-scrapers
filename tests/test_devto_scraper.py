@@ -5,7 +5,7 @@ import pytest
 import respx
 from httpx import Response
 
-from resumesh_scrapers.devto_scraper import DevToScraperService
+from resumesh_scrapers.platforms import DevToScraperService
 from resumesh_scrapers.exceptions import DevToScraperError
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
 
