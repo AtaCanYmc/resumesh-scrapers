@@ -102,7 +102,7 @@ class GitHubScraperService(IScraperService):
         if not re.match(r"^[a-zA-Z0-9\-]+$", username):
             raise GitHubScraperError("Invalid GitHub username format.")
 
-        url = f"{_GITHUB_API_BASE}/users/{username}/repos" f"?per_page={_DEFAULT_PER_PAGE}&sort=updated"
+        url = f"{_GITHUB_API_BASE}/users/{username}/repos?per_page={_DEFAULT_PER_PAGE}&sort=updated"
         headers = GitHubScraperService._build_headers(pat)
 
         logger.info("[GITHUB] Fetching repos for user=%s", username)

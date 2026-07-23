@@ -115,7 +115,7 @@ class DevToScraperService(IScraperService):
         if not re.match(r"^[a-zA-Z0-9\-]+$", username):
             raise DevToScraperError("Invalid DevTo username format.")
 
-        url = f"{_DEVTO_API_BASE}/articles" f"?username={username}&per_page={_DEFAULT_PER_PAGE}"
+        url = f"{_DEVTO_API_BASE}/articles?username={username}&per_page={_DEFAULT_PER_PAGE}"
         headers = DevToScraperService._build_headers(api_key)
 
         logger.info("[DEV_TO] Fetching articles for user=%s", username)

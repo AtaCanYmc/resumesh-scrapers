@@ -48,7 +48,7 @@ async def fetch_url(
 
     if response.status_code != 200:
         raise error_class(
-            f"{platform_name} API returned HTTP {response.status_code}." f" Response: {response.text[:300]}",
+            f"{platform_name} API returned HTTP {response.status_code}. Response: {response.text[:300]}",
             status_code=response.status_code,
         )
 
