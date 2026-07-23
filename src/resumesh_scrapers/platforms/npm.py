@@ -71,6 +71,8 @@ class NpmScraperService(IScraperService):
 
         try:
             result_model = NpmSearchResultModel.model_validate(data)
+            if not result_model.objects:
+                return []
             return [result_model]
         except Exception as exc:
             logger.warning("[NPM] Failed to validate NpmSearchResultModel: %s", exc)

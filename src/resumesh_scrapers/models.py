@@ -135,7 +135,7 @@ class Info(BaseModel):
     requires_python: str | None = None
     summary: str | None = None
     version: str
-    yanked: bool
+    yanked: bool = False
     yanked_reason: str | None = None
 
 

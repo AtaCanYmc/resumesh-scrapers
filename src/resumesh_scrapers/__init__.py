@@ -17,6 +17,8 @@ from resumesh_scrapers.exceptions import (
     GitHubScraperError,
     MediumScraperError,
     SubstackScraperError,
+    NpmScraperError,
+    PyPIScraperError,
     ScraperError,
     NetworkError,
     RateLimitError,
@@ -61,4 +63,6 @@ __all__ = [
     "GitHubScraperError",
     "DevToScraperError",
     "MediumScraperError",
+    "NpmScraperError",
+    "PyPIScraperError",
 ]
