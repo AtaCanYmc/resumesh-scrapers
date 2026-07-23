@@ -12,24 +12,28 @@ Quick start::
 """
 
 from resumesh_scrapers._version import __version__
-from resumesh_scrapers.base import IScraperService
-from resumesh_scrapers.devto_scraper import DevToScraper, DevToScraperService
 from resumesh_scrapers.exceptions import (
     DevToScraperError,
     GitHubScraperError,
     MediumScraperError,
     ScraperError,
 )
-from resumesh_scrapers.github_scraper import GitHubScraper, GitHubScraperService
-from resumesh_scrapers.medium_scraper import MediumScraper, MediumScraperService
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, ScrapedProject
+from resumesh_scrapers.platforms import (
+    IScraperService,
+    DevToScraper,
+    DevToScraperService,
+    GitHubScraper,
+    GitHubScraperService,
+    MediumScraper,
+    MediumScraperService,
+)
 
 __all__ = [
     # Version
     "__version__",
-    # Base
-    "IScraperService",
     # Scrapers
+    "IScraperService",
     "GitHubScraperService",
     "GitHubScraper",
     "DevToScraperService",

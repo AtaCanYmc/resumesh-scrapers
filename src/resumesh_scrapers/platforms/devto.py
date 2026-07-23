@@ -25,9 +25,9 @@ import logging
 import re
 from datetime import datetime, timezone
 
-from resumesh_scrapers.base import IScraperService
+from resumesh_scrapers.platforms.base import IScraperService
+from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import DevToScraperError
-from resumesh_scrapers.http_client import fetch_url
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
 
 logger = logging.getLogger(__name__)

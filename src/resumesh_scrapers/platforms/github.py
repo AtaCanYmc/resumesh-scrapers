@@ -22,9 +22,9 @@ import logging
 import re
 from typing import Any
 
-from resumesh_scrapers.base import IScraperService
+from resumesh_scrapers.platforms.base import IScraperService
+from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.http_client import fetch_url
 from resumesh_scrapers.models import ScrapedProject
 
 logger = logging.getLogger(__name__)
