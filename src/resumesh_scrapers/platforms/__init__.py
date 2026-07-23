@@ -3,6 +3,8 @@ from resumesh_scrapers.platforms.behance import BehanceScraperService, BehanceSc
 from resumesh_scrapers.platforms.devto import DevToScraper, DevToScraperService
 from resumesh_scrapers.platforms.github import GitHubScraper, GitHubScraperService
 from resumesh_scrapers.platforms.medium import MediumScraper, MediumScraperService
+from resumesh_scrapers.platforms.npm import NpmScraperService, NpmScraper
+from resumesh_scrapers.platforms.pypi import PyPIScraperService, PyPIScraper
 from resumesh_scrapers.platforms.substack import SubstackScraperService, SubstackScraper
 
 __all__ = [
@@ -16,5 +18,9 @@ __all__ = [
     "BehanceScraper",
     "BehanceScraperService",
     "SubstackScraperService",
-    "SubstackScraper"
+    "SubstackScraper",
+    "NpmScraperService",
+    "NpmScraper",
+    "PyPIScraperService",
+    "PyPIScraper",
 ]

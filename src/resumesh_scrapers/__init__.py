@@ -22,7 +22,13 @@ from resumesh_scrapers.exceptions import (
     RateLimitError,
     ParsingError
 )
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, GitHubRepositoryModel
+from resumesh_scrapers.models import (
+    ArticlePlatform,
+    ScrapedArticle,
+    GitHubRepositoryModel,
+    PyPiPackageModel,
+    NpmSearchResultModel
+)
 from resumesh_scrapers.platforms import (
     IScraperService,
     DevToScraper,
@@ -48,6 +54,8 @@ __all__ = [
     "GitHubRepositoryModel",
     "ScrapedArticle",
     "ArticlePlatform",
+    "PyPiPackageModel",
+    "NpmSearchResultModel",
     # Exceptions
     "ScraperError",
     "GitHubScraperError",
