@@ -17,12 +17,12 @@ from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, GitHubRepo
 class TestScrapedProject:
     def test_minimal(self):
         project = GitHubRepositoryModel(name="my-repo")
-        assert project.title == "my-repo"
-        assert project.stars == 0
+        assert project.name == "my-repo"
+        assert project.stargazers_count == 0
         assert project.languages == []
         assert project.tags == []
         assert project.description is None
-        assert project.github_url is None
+        assert project.html_url is None
 
     def test_full(self):
         project = GitHubRepositoryModel(

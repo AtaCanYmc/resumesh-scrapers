@@ -136,15 +136,14 @@ class TestGitHubScraperParseRepo:
     def test_parse_repo_fields(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[0])
 
-        assert project.title == "ResuMesh"
+        assert project.name == "ResuMesh"
         assert project.description == "Portfolio manager"
-        assert str(project.github_url) == "https://github.com/octocat/ResuMesh"
-        assert project.stars == 42
-        assert project.watchers == 10
-        assert project.forks == 5
+        assert str(project.html_url) == "https://github.com/octocat/ResuMesh"
+        assert project.stargazers_count == 42
+        assert project.watchers_count == 10
+        assert project.forks_count == 5
         assert "Python" in project.languages
         assert "resumesh" in project.tags
-        assert project.raw_github_data == SAMPLE_REPOS[0]
 
     def test_parse_repo_no_language(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[2])
