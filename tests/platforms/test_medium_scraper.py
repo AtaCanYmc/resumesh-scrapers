@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.medium_scraper import MediumScraperService
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms import MediumScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -59,9 +58,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_success(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(200, text=SAMPLE_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
         articles = await scraper.fetch_data("testuser")
 
@@ -73,9 +70,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_url_tracking_params_stripped(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(200, text=SAMPLE_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
         articles = await scraper.fetch_data("testuser")
 
@@ -86,9 +81,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_html_stripped_from_summary(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(200, text=SAMPLE_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
         articles = await scraper.fetch_data("testuser")
 
@@ -100,9 +93,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_tags_extracted(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(200, text=SAMPLE_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
         articles = await scraper.fetch_data("testuser")
 
@@ -111,9 +102,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_empty_feed(self, scraper):
-        respx.get("https://medium.com/feed/@nobody").mock(
-            return_value=Response(200, text=EMPTY_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@nobody").mock(return_value=Response(200, text=EMPTY_RSS_FEED))
 
         articles = await scraper.fetch_data("nobody")
         assert articles == []
@@ -121,9 +110,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_http_error(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(404, text="Not Found"))
 
         with pytest.raises(MediumScraperError) as exc_info:
             await scraper.fetch_data("testuser")
@@ -133,9 +120,7 @@ class TestMediumScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_articles_network_error(self, scraper):
-        respx.get("https://medium.com/feed/@testuser").mock(
-            side_effect=httpx.ConnectError("dns failure")
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(side_effect=httpx.ConnectError("dns failure"))
 
         with pytest.raises(MediumScraperError, match="Network error"):
             await scraper.fetch_data("testuser")
@@ -149,9 +134,7 @@ class TestMediumScraperFetchData:
     @pytest.mark.asyncio
     async def test_reading_time_always_zero(self, scraper):
         """Medium RSS doesn't provide reading time — should always be 0."""
-        respx.get("https://medium.com/feed/@testuser").mock(
-            return_value=Response(200, text=SAMPLE_RSS_FEED)
-        )
+        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
         articles = await scraper.fetch_data("testuser")
         for article in articles:

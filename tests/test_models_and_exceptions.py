@@ -1,57 +1,55 @@
 """Tests for Pydantic models and exception hierarchy."""
 
 import pytest
-
 from resumesh_scrapers.exceptions import (
     DevToScraperError,
     GitHubScraperError,
     MediumScraperError,
     ScraperError,
 )
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, ScrapedProject
-
+from resumesh_scrapers.models import (
+    ArticlePlatform,
+    GitHubRepositoryModel,
+    ScrapedArticle,
+)
 
 # ── Models ──────────────────────────────────────────────────────────────────
 
 
 class TestScrapedProject:
     def test_minimal(self):
-        project = ScrapedProject(title="my-repo")
-        assert project.title == "my-repo"
-        assert project.stars == 0
+        project = GitHubRepositoryModel(name="my-repo")
+        assert project.name == "my-repo"
+        assert project.stargazers_count == 0
         assert project.languages == []
         assert project.tags == []
         assert project.description is None
-        assert project.github_url is None
+        assert project.html_url is None
 
     def test_full(self):
-        project = ScrapedProject(
-            title="ResuMesh",
-            description="Portfolio manager",
-            github_url="https://github.com/AtaCanYmc/ResuMesh",
-            stars=42,
-            watchers=10,
-            forks=5,
-            languages=["Python", "TypeScript"],
-            tags=["portfolio", "cv"],
-            raw_github_data={"id": 123},
-            created_at="2024-01-01T00:00:00Z",
+        project = GitHubRepositoryModel(
+            name="ResuMesh",
+            url="https://github.com/ResuMesh/ResuMesh",
+            description="ResuMesh",
+            stargazers_count=42,
+            language="Python",
         )
-        assert project.stars == 42
-        assert project.languages == ["Python", "TypeScript"]
-        assert str(project.github_url) == "https://github.com/AtaCanYmc/ResuMesh"
+        assert project.stargazers_count == 42
+        assert project.language == "Python"
+        assert str(project.url) == "https://github.com/ResuMesh/ResuMesh"
 
     def test_model_dump_roundtrip(self):
-        project = ScrapedProject(
-            title="test",
-            github_url="https://github.com/test/test",
-            stars=1,
+        project = GitHubRepositoryModel(
+            name="test",
+            url="https://github.com/test/test",
+            stargazers_count=1,
         )
         data = project.model_dump()
-        assert data["title"] == "test"
-        assert data["stars"] == 1
-        reconstructed = ScrapedProject(**data)
-        assert reconstructed.title == project.title
+        assert data["name"] == "test"
+        assert data["stargazers_count"] == 1
+        reconstructed = GitHubRepositoryModel(**data)
+        assert reconstructed.name == project.name
+        assert reconstructed.stargazers_count == project.stargazers_count
 
 
 class TestScrapedArticle:

@@ -41,19 +41,14 @@ async def fetch_url(
     """
     logger.debug("[%s] GET request to url=%s", platform_name, url)
     try:
-        async with httpx.AsyncClient(
-            timeout=timeout, follow_redirects=follow_redirects
-        ) as client:
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=follow_redirects) as client:
             response = await client.get(url, headers=headers)
     except httpx.RequestError as exc:
-        raise error_class(
-            f"Network error while fetching {platform_name} data: {exc}"
-        ) from exc
+        raise error_class(f"Network error while fetching {platform_name} data: {exc}") from exc
 
     if response.status_code != 200:
         raise error_class(
-            f"{platform_name} API returned HTTP {response.status_code}."
-            f" Response: {response.text[:300]}",
+            f"{platform_name} API returned HTTP {response.status_code}. Response: {response.text[:300]}",
             status_code=response.status_code,
         )
 

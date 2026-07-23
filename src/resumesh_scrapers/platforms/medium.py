@@ -25,10 +25,10 @@ from datetime import datetime, timezone
 
 import feedparser
 
-from resumesh_scrapers.base import IScraperService
+from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.http_client import fetch_url
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,8 @@ class MediumScraperService(IScraperService):
 
         # Convert publish date to UTC datetime
         if entry.get("published_parsed"):
-            published_at = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+            p = entry.published_parsed
+            published_at = datetime(p[0], p[1], p[2], p[3], p[4], p[5], tzinfo=timezone.utc)
         else:
             published_at = datetime.now(timezone.utc)
             logger.debug(

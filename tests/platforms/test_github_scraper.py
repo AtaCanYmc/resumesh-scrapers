@@ -4,10 +4,9 @@ import httpx
 import pytest
 import respx
 from httpx import Response
-
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.github_scraper import GitHubScraperService
-from resumesh_scrapers.models import ScrapedProject
+from resumesh_scrapers.models import GitHubRepositoryModel
+from resumesh_scrapers.platforms import GitHubScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -60,24 +59,20 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_success(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=SAMPLE_REPOS)
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=SAMPLE_REPOS))
 
         projects = await scraper.fetch_data("octocat")
 
         assert len(projects) == 2  # fork excluded
-        assert all(isinstance(p, ScrapedProject) for p in projects)
-        assert projects[0].title == "ResuMesh"
-        assert projects[0].stars == 42
-        assert projects[0].languages == ["Python"]
+        assert all(isinstance(p, GitHubRepositoryModel) for p in projects)
+        assert projects[0].name == "ResuMesh"
+        assert projects[0].stargazers_count == 42
+        assert projects[0].language == "Python"
 
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_include_forks(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=SAMPLE_REPOS)
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=SAMPLE_REPOS))
 
         projects = await scraper.fetch_data("octocat", include_forks=True)
 
@@ -86,9 +81,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_empty(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=[])
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=[]))
 
         projects = await scraper.fetch_data("octocat")
         assert projects == []
@@ -96,9 +89,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_repos_http_error(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(404, text="Not Found"))
 
         with pytest.raises(GitHubScraperError) as exc_info:
             await scraper.fetch_data("octocat")
@@ -123,9 +114,7 @@ class TestGitHubScraperFetchData:
     @respx.mock
     @pytest.mark.asyncio
     async def test_repo_without_language(self, scraper):
-        respx.get("https://api.github.com/users/octocat/repos").mock(
-            return_value=Response(200, json=[SAMPLE_REPOS[2]])
-        )
+        respx.get("https://api.github.com/users/octocat/repos").mock(return_value=Response(200, json=[SAMPLE_REPOS[2]]))
 
         projects = await scraper.fetch_data("octocat")
         assert projects[0].languages == []
@@ -136,15 +125,14 @@ class TestGitHubScraperParseRepo:
     def test_parse_repo_fields(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[0])
 
-        assert project.title == "ResuMesh"
+        assert project.name == "ResuMesh"
         assert project.description == "Portfolio manager"
-        assert str(project.github_url) == "https://github.com/octocat/ResuMesh"
-        assert project.stars == 42
-        assert project.watchers == 10
-        assert project.forks == 5
+        assert str(project.html_url) == "https://github.com/octocat/ResuMesh"
+        assert project.stargazers_count == 42
+        assert project.watchers_count == 10
+        assert project.forks_count == 5
         assert "Python" in project.languages
         assert "resumesh" in project.tags
-        assert project.raw_github_data == SAMPLE_REPOS[0]
 
     def test_parse_repo_no_language(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[2])
