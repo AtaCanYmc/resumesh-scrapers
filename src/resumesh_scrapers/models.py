@@ -57,32 +57,33 @@ class GitHubLicense(BaseModel):
 
 class GitHubRepositoryModel(BaseModel):
     """Pydantic model for raw repository data fetched by the GitHub scraper."""
-    id: int
-    node_id: str
+    id: Optional[int] = None
+    node_id: Optional[str] = None
     name: str
-    full_name: str
-    private: bool
-    owner: GitHubOwner
-    html_url: HttpUrl
+    full_name: Optional[str] = None
+    private: bool = False
+    owner: Optional[GitHubOwner] = None
+    html_url: Optional[HttpUrl | str] = None
     description: Optional[str] = None
-    fork: bool
-    url: HttpUrl
-    created_at: datetime
-    updated_at: datetime
-    pushed_at: datetime
+    fork: bool = False
+    url: Optional[HttpUrl | str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    pushed_at: Optional[datetime] = None
     homepage: Optional[HttpUrl | str] = None
-    size: int
-    stargazers_count: int
-    watchers_count: int
+    size: int = 0
+    stargazers_count: int = Field(default=0, validation_alias="stars")
+    watchers_count: int = 0
+    forks_count: int = 0
     language: Optional[str] = None
-    forks_count: int
-    open_issues_count: int
+    languages: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    open_issues_count: int = 0
     license: Optional[GitHubLicense] = None
-    topics: list[str] = Field(default_factory=list)
-    visibility: str
-    default_branch: str
-    # config
-    model_config = ConfigDict(extra="ignore")
+    visibility: str = "public"
+    default_branch: str = "main"
+
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
 
 
 class BehanceProjectModel(BaseModel):
