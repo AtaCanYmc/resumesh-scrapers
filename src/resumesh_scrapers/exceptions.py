@@ -57,6 +57,24 @@ class SubstackScraperError(ScraperError):
         self.message = message
 
 
+class NpmScraperError(ScraperError):
+    """Raised when the npm registry API returns an error or unexpected response."""
+
+    def __init__(self, message: str, status_code: int | None = None):
+        super().__init__(message)
+        self.status_code = status_code
+        self.message = message
+
+
+class PyPIScraperError(ScraperError):
+    """Raised when the PyPI API returns an error or unexpected response."""
+
+    def __init__(self, message: str, status_code: int | None = None):
+        super().__init__(message)
+        self.status_code = status_code
+        self.message = message
+
+
 class NetworkError(ScraperError):
     """Raised during network connectivity issues, timeouts, or HTTP connection errors."""
 

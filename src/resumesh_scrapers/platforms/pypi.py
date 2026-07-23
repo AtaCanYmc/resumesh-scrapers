@@ -19,19 +19,15 @@ import logging
 import re
 from typing import List
 
+from resumesh_scrapers.exceptions import PyPIScraperError
 from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
-from resumesh_scrapers.exceptions import ScraperError
 from resumesh_scrapers.models import PyPiPackageModel
 
 logger = logging.getLogger(__name__)
 
 _PYPI_API_BASE = "https://pypi.org/pypi/{package_name}/json"
 _DEFAULT_TIMEOUT = 15.0
-
-
-class PyPIScraperError(ScraperError):
-    """Raised when the PyPI API returns an error or unexpected response."""
 
 
 class PyPIScraperService(IScraperService):

@@ -2,7 +2,7 @@
 NPM Scraper Service
 =====================
 Fetches the user's published packages using the public npm registry API
-and returns them as ``ScrapedProject`` models.
+and returns them as ``NpmSearchResultModel`` models.
 
 Usage:
     from resumesh_scrapers import NpmScraperService
@@ -11,26 +11,22 @@ Usage:
     packages = await scraper.fetch_data(username="atacanymc")
 
 API Reference:
-    GET https://registry.npmjs.org/-/v1/search?text=maintainer:{username}
+    GET https://registry.npmjs.org/-/v1/search?text=maintainer:{username}&size=100&from=0
 """
 
 import logging
 import re
 from typing import List
 
+from resumesh_scrapers.exceptions import NpmScraperError
 from resumesh_scrapers.models import NpmSearchResultModel
 from resumesh_scrapers.platforms.base import IScraperService
 from resumesh_scrapers.core.client import fetch_url
-from resumesh_scrapers.exceptions import ScraperError
 
 logger = logging.getLogger(__name__)
 
-_NPM_SEARCH_URL = "https://registry.npmjs.org/-/v1/search?text=maintainer:{username}&size={size}&from={from_index}"
+_NPM_SEARCH_URL = "https://registry.npmjs.org/-/v1/search?text=maintainer:{username}&size=100&from=0"
 _DEFAULT_TIMEOUT = 15.0
-
-
-class NpmScraperError(ScraperError):
-    """Raised when the npm registry API returns an error or unexpected response."""
 
 
 class NpmScraperService(IScraperService):
@@ -46,7 +42,7 @@ class NpmScraperService(IScraperService):
             username: npm maintainer username.
 
         Returns:
-            List of ``ScrapedProject`` objects.
+            List of ``NpmSearchResultModel`` objects.
 
         Raises:
             NpmScraperError: If the API request fails or format is invalid.
@@ -71,18 +67,14 @@ class NpmScraperService(IScraperService):
         except Exception as exc:
             raise NpmScraperError(f"Failed to parse JSON response from npm registry: {exc}")
 
-        objects = data.get("objects", [])
-        logger.info("[NPM] Received %d packages for maintainer=%s", len(objects), clean_user)
+        logger.info("[NPM] Received response from npm search for maintainer=%s", clean_user)
 
-        projects: List[NpmSearchResultModel] = []
-        for raw in objects:
-            try:
-                projects.append(NpmSearchResultModel.model_validate(raw))
-            except Exception as exc:
-                logger.warning("[NPM] Skipping package due to parse error: %s", exc)
-
-        logger.info("[NPM] Successfully parsed %d packages for maintainer=%s", len(projects), clean_user)
-        return projects
+        try:
+            result_model = NpmSearchResultModel.model_validate(data)
+            return [result_model]
+        except Exception as exc:
+            logger.warning("[NPM] Failed to validate NpmSearchResultModel: %s", exc)
+            raise NpmScraperError(f"Failed to validate npm search result: {exc}")
 
 
 # Alias for backward compatibility
