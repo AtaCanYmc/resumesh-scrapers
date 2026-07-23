@@ -16,6 +16,7 @@ class ArticlePlatform(str, Enum):
     """Supported article platforms."""
     MEDIUM = "MEDIUM"
     DEV_TO = "DEV_TO"
+    SUBSTACK = "SUBSTACK"
 
 
 class ScrapedArticle(BaseModel):

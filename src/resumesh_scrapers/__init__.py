@@ -16,6 +16,7 @@ from resumesh_scrapers.exceptions import (
     DevToScraperError,
     GitHubScraperError,
     MediumScraperError,
+    SubstackScraperError,
     ScraperError,
     NetworkError,
     RateLimitError,
