@@ -17,6 +17,9 @@ from resumesh_scrapers.exceptions import (
     GitHubScraperError,
     MediumScraperError,
     ScraperError,
+    NetworkError,
+    RateLimitError,
+    ParsingError
 )
 from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle, ScrapedProject
 from resumesh_scrapers.platforms import (
