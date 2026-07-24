@@ -23,11 +23,11 @@ To obtain an API key:
 
 import logging
 import re
-from datetime import datetime, timezone
+from typing import Optional
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import DevToScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import DevToArticleModel
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class DevToScraperService(IScraperService):
     """
 
     @staticmethod
-    def _build_headers(api_key: str | None = None) -> dict[str, str]:
+    def _build_headers(api_key: Optional[str] = None) -> dict[str, str]:
         """
         Creates HTTP headers for Dev.to API.
 
@@ -62,41 +62,7 @@ class DevToScraperService(IScraperService):
             headers["api-key"] = api_key
         return headers
 
-    @staticmethod
-    def _parse_article(raw: dict) -> ScrapedArticle:
-        """
-        Converts the raw article dict from Dev.to API to ``ScrapedArticle``.
-
-        Args:
-            raw: Single article object returned by Dev.to API.
-
-        Returns:
-            A ``ScrapedArticle`` object.
-        """
-        published_at: datetime | None = None
-        if raw.get("published_at"):
-            try:
-                published_at = datetime.strptime(raw["published_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-            except ValueError:
-                # Some dates may have milliseconds or timezone offset
-                logger.debug(
-                    "[DEV_TO] Could not parse date '%s' for article id=%s, using now()",
-                    raw.get("published_at"),
-                    raw.get("id"),
-                )
-                published_at = datetime.now(timezone.utc)
-
-        return ScrapedArticle(
-            title=raw["title"],
-            summary=raw.get("description"),
-            url=raw["url"],
-            platform=ArticlePlatform.DEV_TO,
-            reading_time_minutes=raw.get("reading_time_minutes", 0),
-            published_at=published_at,
-            raw_platform_data=raw,
-        )
-
-    async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
+    async def fetch_data(self, username: str, **kwargs) -> list[DevToArticleModel]:
         api_key = kwargs.get("api_key")
         """
         Fetches the user's articles from Dev.to REST API.
@@ -131,10 +97,10 @@ class DevToScraperService(IScraperService):
         raw_articles: list[dict] = response.json()
         logger.info("[DEV_TO] Received %d articles for user=%s", len(raw_articles), username)
 
-        articles: list[ScrapedArticle] = []
+        articles: list[DevToArticleModel] = []
         for raw in raw_articles:
             try:
-                articles.append(DevToScraperService._parse_article(raw))
+                articles.append(DevToArticleModel.model_validate(raw))
             except Exception as exc:
                 # Do not let a single bad article break the entire list
                 logger.warning(

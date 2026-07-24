@@ -1,16 +1,17 @@
 """Tests for DevToScraperService."""
+from typing import List
 
 import httpx
 import pytest
 import respx
 from httpx import Response
 from resumesh_scrapers.exceptions import DevToScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import DevToArticleModel
 from resumesh_scrapers.platforms import DevToScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
-SAMPLE_ARTICLES = [
+SAMPLE_ARTICLES: List[DevToArticleModel] = [
     {
         "id": 1001,
         "title": "Getting Started with FastAPI",
@@ -47,9 +48,8 @@ class TestDevToScraperFetchData:
         articles = await scraper.fetch_data("atacanymc")
 
         assert len(articles) == 2
-        assert all(isinstance(a, ScrapedArticle) for a in articles)
+        assert all(isinstance(a, DevToArticleModel) for a in articles)
         assert articles[0].title == "Getting Started with FastAPI"
-        assert articles[0].platform == ArticlePlatform.DEV_TO
         assert articles[0].reading_time_minutes == 7
 
     @respx.mock
@@ -96,39 +96,6 @@ class TestDevToScraperFetchData:
         articles = await scraper.fetch_data("atacanymc")
         assert len(articles) == 1
         assert articles[0].title == "Getting Started with FastAPI"
-
-
-class TestDevToScraperParseArticle:
-    def test_parse_article_fields(self):
-        article = DevToScraperService._parse_article(SAMPLE_ARTICLES[0])
-
-        assert article.title == "Getting Started with FastAPI"
-        assert article.summary == "A beginner's guide to FastAPI"
-        assert article.platform == ArticlePlatform.DEV_TO
-        assert article.reading_time_minutes == 7
-        assert article.published_at is not None
-        assert article.raw_platform_data == SAMPLE_ARTICLES[0]
-
-    def test_parse_article_no_published_at(self):
-        raw = {
-            "id": 2000,
-            "title": "No Date Article",
-            "url": "https://dev.to/user/no-date",
-            "description": "Test",
-        }
-        article = DevToScraperService._parse_article(raw)
-        assert article.published_at is None
-
-    def test_parse_article_bad_date_fallback(self):
-        raw = {
-            "id": 2001,
-            "title": "Bad Date Article",
-            "url": "https://dev.to/user/bad-date",
-            "published_at": "not-a-date",
-        }
-        article = DevToScraperService._parse_article(raw)
-        # Should fall back to now() instead of crashing
-        assert article.published_at is not None
 
 
 class TestDevToScraperHeaders:
