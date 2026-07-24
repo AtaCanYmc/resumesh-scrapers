@@ -2,7 +2,7 @@
 Dev.to Scraper Service
 ========================
 Fetches the user's articles using Dev.to's public REST API
-and returns them as ``ScrapedArticle`` models.
+and returns them as ``DevToArticleModel`` models.
 
 Usage:
     from resumesh_scrapers import DevToScraperService
@@ -72,7 +72,7 @@ class DevToScraperService(IScraperService):
             api_key: Dev.to API key (optional).
 
         Returns:
-            List of ``ScrapedArticle`` objects.
+            List of ``DevToArticleModel`` objects.
 
         Raises:
             DevToScraperError: If API request fails (4xx / 5xx or network error)

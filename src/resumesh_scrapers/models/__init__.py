@@ -1,4 +1,3 @@
-from resumesh_scrapers.models.article import ArticlePlatform, ScrapedArticle
 from resumesh_scrapers.models.behance import BehanceProjectModel
 from resumesh_scrapers.models.devto import DevToArticleModel
 from resumesh_scrapers.models.github import (
@@ -6,6 +5,7 @@ from resumesh_scrapers.models.github import (
     GitHubOwner,
     GitHubRepositoryModel,
 )
+from resumesh_scrapers.models.medium import MediumEntryModel
 from resumesh_scrapers.models.npm import (
     NpmDownloads,
     NpmFlags,
@@ -28,9 +28,8 @@ from resumesh_scrapers.models.pypi import (
 )
 
 __all__ = [
-    "ArticlePlatform",
     "DevToArticleModel",
-    "ScrapedArticle",
+    "MediumEntryModel",
     "BehanceProjectModel",
     "GitHubLicense",
     "GitHubOwner",

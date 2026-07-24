@@ -8,10 +8,10 @@ from resumesh_scrapers.exceptions import (
     ScraperError,
 )
 from resumesh_scrapers.models import (
-    ArticlePlatform,
     GitHubRepositoryModel,
-    ScrapedArticle,
+    MediumEntryModel
 )
+
 
 # ── Models ──────────────────────────────────────────────────────────────────
 

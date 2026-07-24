@@ -2,7 +2,7 @@
 Medium Scraper Service
 ========================
 Fetches the user's articles using Medium's public RSS feed URL
-and returns them as ``ScrapedArticle`` models.
+and returns them as ``MediumEntryModel`` models.
 
 Usage:
     from resumesh_scrapers import MediumScraperService
@@ -21,13 +21,12 @@ Note:
 import html
 import logging
 import re
-from datetime import datetime, timezone
 
 import feedparser
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import MediumEntryModel
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -41,9 +40,10 @@ class MediumScraperService(IScraperService):
     Service that fetches and parses Medium RSS feed.
     """
 
-    def _parse_entry(entry: feedparser.FeedParserDict) -> ScrapedArticle:
+    @staticmethod
+    def _parse_entry(entry: feedparser.FeedParserDict) -> MediumEntryModel:
         """
-        Converts a single RSS entry from feedparser to ``ScrapedArticle``.
+        Converts a single RSS entry from feedparser to ``MediumEntryModel``.
 
         Args:
             entry: RSS entry parsed by feedparser.
@@ -53,35 +53,17 @@ class MediumScraperService(IScraperService):
         """
         # Clean UTM and tracking parameters from URL
         clean_url = entry.link.split("?")[0]
-
-        # Convert publish date to UTC datetime
-        if entry.get("published_parsed"):
-            p = entry.published_parsed
-            published_at = datetime(p[0], p[1], p[2], p[3], p[4], p[5], tzinfo=timezone.utc)
-        else:
-            published_at = datetime.now(timezone.utc)
-            logger.debug(
-                "[MEDIUM] No published_parsed for entry='%s', using now()",
-                entry.get("title", "unknown"),
-            )
-
         tags = [t.term for t in entry.tags] if entry.get("tags") else []
-
         raw_summary = entry.get("summary", "") or ""
         clean_summary = re.sub(r"<[^>]+>", "", raw_summary).strip()
         clean_summary = html.unescape(clean_summary)
+        entry["summary"] = clean_summary  # Update the entry dict for consistency
+        entry["tags"] = tags
+        entry["link"] = clean_url
 
-        return ScrapedArticle(
-            title=entry.title,
-            summary=clean_summary,
-            url=clean_url,
-            platform=ArticlePlatform.MEDIUM,
-            reading_time_minutes=0,  # Medium RSS does not provide this info
-            published_at=published_at,
-            raw_platform_data={"tags": tags},
-        )
+        return MediumEntryModel.model_validate(entry)
 
-    async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
+    async def fetch_data(self, username: str, **kwargs) -> list[MediumEntryModel]:
         """
         Fetches the user's articles from Medium RSS feed.
 
@@ -89,7 +71,7 @@ class MediumScraperService(IScraperService):
             username: Medium username (without @ symbol).
 
         Returns:
-            List of ``ScrapedArticle`` objects.
+            List of ``MediumEntryModel`` objects.
 
         Raises:
             MediumScraperError: If RSS feed cannot be fetched,
@@ -126,7 +108,7 @@ class MediumScraperService(IScraperService):
             username,
         )
 
-        articles: list[ScrapedArticle] = []
+        articles: list[MediumEntryModel] = []
         for entry in feed.entries:
             try:
                 articles.append(MediumScraperService._parse_entry(entry))
@@ -137,7 +119,6 @@ class MediumScraperService(IScraperService):
                     entry.get("title", "unknown"),
                     exc,
                 )
-
         logger.info("[MEDIUM] Parsed %d articles for user=%s", len(articles), username)
         return articles
 

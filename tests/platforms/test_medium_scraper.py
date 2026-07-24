@@ -5,7 +5,7 @@ import pytest
 import respx
 from httpx import Response
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import MediumEntryModel
 from resumesh_scrapers.platforms import MediumScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
@@ -63,9 +63,8 @@ class TestMediumScraperFetchData:
         articles = await scraper.fetch_data("testuser")
 
         assert len(articles) == 2
-        assert all(isinstance(a, ScrapedArticle) for a in articles)
+        assert all(isinstance(a, MediumEntryModel) for a in articles)
         assert articles[0].title == "My First Post"
-        assert articles[0].platform == ArticlePlatform.MEDIUM
 
     @respx.mock
     @pytest.mark.asyncio
