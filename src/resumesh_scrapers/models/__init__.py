@@ -1,10 +1,11 @@
-from resumesh_scrapers.models.article import ArticlePlatform, ScrapedArticle
 from resumesh_scrapers.models.behance import BehanceProjectModel
+from resumesh_scrapers.models.devto import DevToArticleModel
 from resumesh_scrapers.models.github import (
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
 )
+from resumesh_scrapers.models.medium import MediumEntryModel
 from resumesh_scrapers.models.npm import (
     NpmDownloads,
     NpmFlags,
@@ -25,10 +26,12 @@ from resumesh_scrapers.models.pypi import (
     ReleaseFile,
     Role,
 )
+from resumesh_scrapers.models.substack import SubstackEntryModel
 
 __all__ = [
-    "ArticlePlatform",
-    "ScrapedArticle",
+    "DevToArticleModel",
+    "MediumEntryModel",
+    "SubstackEntryModel",
     "BehanceProjectModel",
     "GitHubLicense",
     "GitHubOwner",

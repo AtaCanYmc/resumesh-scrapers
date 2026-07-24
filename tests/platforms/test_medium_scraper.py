@@ -5,7 +5,7 @@ import pytest
 import respx
 from httpx import Response
 from resumesh_scrapers.exceptions import MediumScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import MediumEntryModel
 from resumesh_scrapers.platforms import MediumScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
@@ -63,9 +63,8 @@ class TestMediumScraperFetchData:
         articles = await scraper.fetch_data("testuser")
 
         assert len(articles) == 2
-        assert all(isinstance(a, ScrapedArticle) for a in articles)
+        assert all(isinstance(a, MediumEntryModel) for a in articles)
         assert articles[0].title == "My First Post"
-        assert articles[0].platform == ArticlePlatform.MEDIUM
 
     @respx.mock
     @pytest.mark.asyncio
@@ -74,7 +73,7 @@ class TestMediumScraperFetchData:
 
         articles = await scraper.fetch_data("testuser")
 
-        url_str = str(articles[0].url)
+        url_str = str(articles[0].link)
         assert "?source=rss" not in url_str
         assert url_str.endswith("abc123")
 
@@ -97,7 +96,7 @@ class TestMediumScraperFetchData:
 
         articles = await scraper.fetch_data("testuser")
 
-        assert articles[0].raw_platform_data["tags"] == ["python", "tutorial"]
+        assert [t.term for t in articles[0].tags] == ["python", "tutorial"]
 
     @respx.mock
     @pytest.mark.asyncio
@@ -129,13 +128,3 @@ class TestMediumScraperFetchData:
     async def test_invalid_username(self, scraper):
         with pytest.raises(MediumScraperError, match="Invalid Medium username"):
             await scraper.fetch_data("bad user!")
-
-    @respx.mock
-    @pytest.mark.asyncio
-    async def test_reading_time_always_zero(self, scraper):
-        """Medium RSS doesn't provide reading time — should always be 0."""
-        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
-
-        articles = await scraper.fetch_data("testuser")
-        for article in articles:
-            assert article.reading_time_minutes == 0

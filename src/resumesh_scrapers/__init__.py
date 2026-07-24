@@ -12,14 +12,15 @@ from resumesh_scrapers.exceptions import (
     SubstackScraperError,
 )
 from resumesh_scrapers.models import (
-    ArticlePlatform,
     BehanceProjectModel,
+    DevToArticleModel,
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
+    MediumEntryModel,
     NpmSearchResultModel,
     PyPiPackageModel,
-    ScrapedArticle,
+    SubstackEntryModel,
 )
 from resumesh_scrapers.platforms import (
     BehanceScraper,
@@ -62,11 +63,12 @@ __all__ = [
     "GitHubOwner",
     "GitHubLicense",
     "GitHubRepositoryModel",
-    "ScrapedArticle",
-    "ArticlePlatform",
+    "MediumEntryModel",
+    "SubstackEntryModel",
     "BehanceProjectModel",
     "PyPiPackageModel",
     "NpmSearchResultModel",
+    "DevToArticleModel",
     # Exceptions
     "ScraperError",
     "GitHubScraperError",

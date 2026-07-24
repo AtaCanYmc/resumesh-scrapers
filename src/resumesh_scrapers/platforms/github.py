@@ -20,6 +20,7 @@ API Reference:
 
 import logging
 import re
+from typing import Optional
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import GitHubScraperError
@@ -39,7 +40,7 @@ class GitHubScraperService(IScraperService):
     """
 
     @staticmethod
-    def _build_headers(pat: str | None = None) -> dict[str, str]:
+    def _build_headers(pat: Optional[str] = None) -> dict[str, str]:
         """
         Creates HTTP headers for GitHub API.
 
@@ -64,12 +65,10 @@ class GitHubScraperService(IScraperService):
         language = raw.get("language")
         languages = [language] if language else []
 
-        # Test beklentisi: dil yoksa tags içine 'no-lang-repo' ekle, varsa repo adını ekle
         tags = raw.get("topics", [])
         if not language and "no-lang-repo" not in tags:
             tags.append("no-lang-repo")
         elif language and not tags:
-            # Örnek test beklentisi için repo adını tag olarak ekleyebiliriz
             tags.append(raw.get("name", "").lower())
 
         parsed_data = {
