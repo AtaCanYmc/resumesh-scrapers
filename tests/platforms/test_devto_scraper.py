@@ -11,7 +11,7 @@ from resumesh_scrapers.platforms import DevToScraperService
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
-SAMPLE_ARTICLES: List[DevToArticleModel] = [
+SAMPLE_ARTICLES: List[dict] = [
     {
         "id": 1001,
         "title": "Getting Started with FastAPI",
@@ -19,6 +19,11 @@ SAMPLE_ARTICLES: List[DevToArticleModel] = [
         "url": "https://dev.to/atacanymc/getting-started-with-fastapi-1a2b",
         "published_at": "2024-06-15T10:30:00Z",
         "reading_time_minutes": 7,
+        "user": {
+            "name": "Atacan",
+            "username": "atacanymc",
+            "user_id": 12345,
+        },
     },
     {
         "id": 1002,
@@ -27,6 +32,11 @@ SAMPLE_ARTICLES: List[DevToArticleModel] = [
         "url": "https://dev.to/atacanymc/advanced-python-patterns-3c4d",
         "published_at": "2024-07-01T08:00:00Z",
         "reading_time_minutes": 12,
+        "user": {
+            "name": "Atacan",
+            "username": "atacanymc",
+            "user_id": 12345,
+        },
     },
 ]
 

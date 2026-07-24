@@ -20,6 +20,7 @@ from resumesh_scrapers.models import (
     NpmSearchResultModel,
     PyPiPackageModel,
     ScrapedArticle,
+    DevToArticleModel
 )
 from resumesh_scrapers.platforms import (
     BehanceScraper,
@@ -67,6 +68,7 @@ __all__ = [
     "BehanceProjectModel",
     "PyPiPackageModel",
     "NpmSearchResultModel",
+    "DevToArticleModel",
     # Exceptions
     "ScraperError",
     "GitHubScraperError",
