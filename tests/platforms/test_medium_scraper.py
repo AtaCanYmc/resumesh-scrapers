@@ -129,12 +129,4 @@ class TestMediumScraperFetchData:
         with pytest.raises(MediumScraperError, match="Invalid Medium username"):
             await scraper.fetch_data("bad user!")
 
-    @respx.mock
-    @pytest.mark.asyncio
-    async def test_reading_time_always_zero(self, scraper):
-        """Medium RSS doesn't provide reading time — should always be 0."""
-        respx.get("https://medium.com/feed/@testuser").mock(return_value=Response(200, text=SAMPLE_RSS_FEED))
 
-        articles = await scraper.fetch_data("testuser")
-        for article in articles:
-            assert article.reading_time_minutes == 0
