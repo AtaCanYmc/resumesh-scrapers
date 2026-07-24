@@ -128,5 +128,3 @@ class TestMediumScraperFetchData:
     async def test_invalid_username(self, scraper):
         with pytest.raises(MediumScraperError, match="Invalid Medium username"):
             await scraper.fetch_data("bad user!")
-
-

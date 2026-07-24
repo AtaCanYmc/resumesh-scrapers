@@ -17,7 +17,6 @@ Feed URL Format:
 import html
 import logging
 import re
-from datetime import datetime, timezone
 
 import feedparser
 

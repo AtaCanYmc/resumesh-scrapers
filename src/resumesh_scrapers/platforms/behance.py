@@ -94,10 +94,10 @@ class BehanceScraperService(IScraperService):
                     published_dt = datetime.fromtimestamp(float(pub_on), tz=timezone.utc)
                 except Exception:
                     pass
-            
+
             covers = proj.get("covers", {})
             covers_url = covers.get("original") or covers.get("max_808") or covers.get("404")
-            
+
             projects.append(
                 BehanceProjectModel(
                     id=str(proj.get("id")) if proj.get("id") else None,

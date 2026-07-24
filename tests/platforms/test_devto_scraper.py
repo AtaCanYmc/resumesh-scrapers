@@ -1,4 +1,5 @@
 """Tests for DevToScraperService."""
+
 from typing import List
 
 import httpx

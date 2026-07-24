@@ -13,14 +13,14 @@ from resumesh_scrapers.exceptions import (
 )
 from resumesh_scrapers.models import (
     BehanceProjectModel,
+    DevToArticleModel,
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
+    MediumEntryModel,
     NpmSearchResultModel,
     PyPiPackageModel,
-    DevToArticleModel,
-    MediumEntryModel,
-    SubstackEntryModel
+    SubstackEntryModel,
 )
 from resumesh_scrapers.platforms import (
     BehanceScraper,

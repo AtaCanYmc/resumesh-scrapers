@@ -85,14 +85,9 @@ class TestBehanceScraperFetchData:
                     "name": "API Design Project",
                     "url": "https://www.behance.net/gallery/12345/API-Design-Project",
                     "published_on": 1718448000,
-                    "stats": {
-                        "appreciations": 99,
-                        "views": 500
-                    },
-                    "covers": {
-                        "original": "https://example.com/cover.jpg"
-                    },
-                    "fields": ["UI/UX", "Mobile"]
+                    "stats": {"appreciations": 99, "views": 500},
+                    "covers": {"original": "https://example.com/cover.jpg"},
+                    "fields": ["UI/UX", "Mobile"],
                 }
             ]
         }
@@ -130,5 +125,3 @@ class TestBehanceScraperFetchData:
         projects = await scraper.fetch_data("testuser")
         assert len(projects) == 1
         assert projects[0].name == "My Awesome Design"
-
-

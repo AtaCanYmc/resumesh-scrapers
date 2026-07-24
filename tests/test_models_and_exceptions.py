@@ -7,11 +7,7 @@ from resumesh_scrapers.exceptions import (
     MediumScraperError,
     ScraperError,
 )
-from resumesh_scrapers.models import (
-    GitHubRepositoryModel,
-    MediumEntryModel,
-    SubstackEntryModel
-)
+from resumesh_scrapers.models import GitHubRepositoryModel, MediumEntryModel, SubstackEntryModel
 
 
 # ── Models ──────────────────────────────────────────────────────────────────
