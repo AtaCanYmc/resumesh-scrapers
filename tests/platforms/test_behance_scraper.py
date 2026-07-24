@@ -74,3 +74,61 @@ class TestBehanceScraperFetchData:
     async def test_invalid_username(self, scraper):
         with pytest.raises(BehanceScraperError, match="Invalid Behance username"):
             await scraper.fetch_data("invalid user!")
+
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_projects_api_success(self, scraper):
+        api_response = {
+            "projects": [
+                {
+                    "id": 12345,
+                    "name": "API Design Project",
+                    "url": "https://www.behance.net/gallery/12345/API-Design-Project",
+                    "published_on": 1718448000,
+                    "stats": {
+                        "appreciations": 99,
+                        "views": 500
+                    },
+                    "covers": {
+                        "original": "https://example.com/cover.jpg"
+                    },
+                    "fields": ["UI/UX", "Mobile"]
+                }
+            ]
+        }
+        respx.get("https://api.behance.net/v2/users/testuser/projects?api_key=my_key").mock(
+            return_value=Response(200, json=api_response)
+        )
+
+        projects = await scraper.fetch_data("testuser", api_key="my_key")
+
+        assert len(projects) == 1
+        assert projects[0].name == "API Design Project"
+        assert projects[0].stats_appreciations == 99
+        assert projects[0].stats_views == 500
+        assert str(projects[0].covers_url) == "https://example.com/cover.jpg"
+        assert projects[0].tags == ["UI/UX", "Mobile"]
+
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_projects_deduplicates(self, scraper):
+        duplicate_html = """
+        <html>
+        <body>
+            <div class="project-card">
+                <a class="projekt-link" href="/gallery/12345/My-Awesome-Design">My Awesome Design</a>
+            </div>
+            <!-- Duplicate of the same project cover -->
+            <div class="ProjectCover-wrapper">
+                <a href="/gallery/12345/My-Awesome-Design">My Awesome Design</a>
+            </div>
+        </body>
+        </html>
+        """
+        respx.get("https://www.behance.net/testuser").mock(return_value=Response(200, text=duplicate_html))
+
+        projects = await scraper.fetch_data("testuser")
+        assert len(projects) == 1
+        assert projects[0].name == "My Awesome Design"
+
+

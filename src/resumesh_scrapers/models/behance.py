@@ -9,11 +9,11 @@ class BehanceProjectModel(BaseModel):
 
     id: Optional[str] = None
     name: str
-    url: HttpUrl
+    url: Optional[str] = None
     published_on: Optional[datetime] = None
     stats_appreciations: int = 0
     stats_views: int = 0
-    covers_url: Optional[HttpUrl | str] = None
+    covers_url: Optional[str] = None
     tags: list[str] = Field(default_factory=list)
 
     model_config = ConfigDict(extra="ignore")
