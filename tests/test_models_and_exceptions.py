@@ -9,7 +9,8 @@ from resumesh_scrapers.exceptions import (
 )
 from resumesh_scrapers.models import (
     GitHubRepositoryModel,
-    MediumEntryModel
+    MediumEntryModel,
+    SubstackEntryModel
 )
 
 
@@ -52,39 +53,30 @@ class TestScrapedProject:
         assert reconstructed.stargazers_count == project.stargazers_count
 
 
-class TestScrapedArticle:
+class TestMediumEntryModel:
     def test_minimal(self):
-        article = ScrapedArticle(
-            title="My Article",
-            url="https://dev.to/user/my-article",
-            platform=ArticlePlatform.DEV_TO,
-        )
-        assert article.title == "My Article"
-        assert article.platform == ArticlePlatform.DEV_TO
-        assert article.reading_time_minutes == 0
+        entry = MediumEntryModel(title="My Article", link="https://medium.com/@user/my-article")
+        assert entry.title == "My Article"
+        assert entry.link == "https://medium.com/@user/my-article"
+        assert entry.tags == []
 
-    def test_medium_article(self):
-        article = ScrapedArticle(
+    def test_full(self):
+        entry = MediumEntryModel(
             title="Medium Post",
-            url="https://medium.com/@user/my-post-abc123",
-            platform=ArticlePlatform.MEDIUM,
+            link="https://medium.com/@user/my-post-abc123",
             summary="A great post",
-            reading_time_minutes=5,
-            published_at="2024-06-15T12:00:00Z",
-            raw_platform_data={"tags": ["python", "ai"]},
+            tags=[{"term": "python"}, {"term": "ai"}],
         )
-        assert article.platform == ArticlePlatform.MEDIUM
-        assert article.reading_time_minutes == 5
-        assert article.raw_platform_data["tags"] == ["python", "ai"]
+        assert entry.summary == "A great post"
+        assert [t.term for t in entry.tags] == ["python", "ai"]
 
 
-class TestArticlePlatform:
-    def test_values(self):
-        assert ArticlePlatform.MEDIUM == "MEDIUM"
-        assert ArticlePlatform.DEV_TO == "DEV_TO"
-
-    def test_is_str_enum(self):
-        assert isinstance(ArticlePlatform.MEDIUM, str)
+class TestSubstackEntryModel:
+    def test_minimal(self):
+        entry = SubstackEntryModel(title="My Substack Post", link="https://atacan.substack.com/p/post")
+        assert entry.title == "My Substack Post"
+        assert entry.link == "https://atacan.substack.com/p/post"
+        assert entry.tags == []
 
 
 # ── Exceptions ──────────────────────────────────────────────────────────────

@@ -19,7 +19,8 @@ from resumesh_scrapers.models import (
     NpmSearchResultModel,
     PyPiPackageModel,
     DevToArticleModel,
-    MediumEntryModel
+    MediumEntryModel,
+    SubstackEntryModel
 )
 from resumesh_scrapers.platforms import (
     BehanceScraper,
@@ -63,6 +64,7 @@ __all__ = [
     "GitHubLicense",
     "GitHubRepositoryModel",
     "MediumEntryModel",
+    "SubstackEntryModel",
     "BehanceProjectModel",
     "PyPiPackageModel",
     "NpmSearchResultModel",

@@ -6,6 +6,7 @@ from resumesh_scrapers.models.github import (
     GitHubRepositoryModel,
 )
 from resumesh_scrapers.models.medium import MediumEntryModel
+from resumesh_scrapers.models.substack import SubstackEntryModel
 from resumesh_scrapers.models.npm import (
     NpmDownloads,
     NpmFlags,
@@ -30,6 +31,7 @@ from resumesh_scrapers.models.pypi import (
 __all__ = [
     "DevToArticleModel",
     "MediumEntryModel",
+    "SubstackEntryModel",
     "BehanceProjectModel",
     "GitHubLicense",
     "GitHubOwner",

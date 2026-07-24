@@ -23,7 +23,7 @@ import feedparser
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import SubstackScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import SubstackEntryModel
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -37,51 +37,33 @@ class SubstackScraperService(IScraperService):
     Service that fetches and parses Substack RSS feed.
     """
 
-    def _parse_entry(entry: feedparser.FeedParserDict) -> ScrapedArticle:
+    @staticmethod
+    def _parse_entry(entry: feedparser.FeedParserDict) -> SubstackEntryModel:
         """
-        Converts a single RSS entry from feedparser to ``ScrapedArticle``.
+        Converts a single RSS entry from feedparser to ``SubstackEntryModel``.
 
         Args:
             entry: RSS entry parsed by feedparser.
 
         Returns:
-            A ``ScrapedArticle`` object.
+            A ``SubstackEntryModel`` object.
         """
         # Clean UTM and tracking parameters from URL if present
         clean_url = entry.link.split("?")[0] if entry.get("link") else ""
 
-        # Convert publish date to UTC datetime
-        if entry.get("published_parsed"):
-            p = entry.published_parsed
-            published_at = datetime(p[0], p[1], p[2], p[3], p[4], p[5], tzinfo=timezone.utc)
-        else:
-            published_at = datetime.now(timezone.utc)
-            logger.debug(
-                "[SUBSTACK] No published_parsed for entry='%s', using now()",
-                entry.get("title", "unknown"),
-            )
-
-        tags = [t.term for t in entry.tags] if entry.get("tags") else []
+        tags = [{"term": t.term} for t in entry.tags] if entry.get("tags") else []
 
         raw_summary = entry.get("summary", "") or ""
         clean_summary = re.sub(r"<[^>]+>", "", raw_summary).strip()
         clean_summary = html.unescape(clean_summary)
 
-        # Estimate reading time based on summary/content length (approx 200 words per minute)
-        word_count = len(clean_summary.split())
-        reading_time = max(1, word_count // 200)
+        entry["summary"] = clean_summary[:300] if clean_summary else None
+        entry["link"] = clean_url
+        entry["tags"] = tags
 
-        return ScrapedArticle(
-            title=entry.get("title", "Untitled"),
-            summary=clean_summary[:300] if clean_summary else None,
-            url=clean_url,
-            platform=ArticlePlatform.SUBSTACK,
-            reading_time_minutes=reading_time,
-            published_at=published_at,
-            raw_platform_data={"tags": tags},
-        )
+        return SubstackEntryModel.model_validate(entry)
 
-    async def fetch_data(self, username: str, **kwargs) -> list[ScrapedArticle]:
+    async def fetch_data(self, username: str, **kwargs) -> list[SubstackEntryModel]:
         publication = username
         """
         Fetches the publication's articles from Substack RSS feed.
@@ -128,7 +110,7 @@ class SubstackScraperService(IScraperService):
             clean_pub,
         )
 
-        articles: list[ScrapedArticle] = []
+        articles: list[SubstackEntryModel] = []
         for entry in feed.entries:
             try:
                 articles.append(SubstackScraperService._parse_entry(entry))

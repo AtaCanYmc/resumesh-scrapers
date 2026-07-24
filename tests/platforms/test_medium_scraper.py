@@ -73,7 +73,7 @@ class TestMediumScraperFetchData:
 
         articles = await scraper.fetch_data("testuser")
 
-        url_str = str(articles[0].url)
+        url_str = str(articles[0].link)
         assert "?source=rss" not in url_str
         assert url_str.endswith("abc123")
 
@@ -96,7 +96,7 @@ class TestMediumScraperFetchData:
 
         articles = await scraper.fetch_data("testuser")
 
-        assert articles[0].raw_platform_data["tags"] == ["python", "tutorial"]
+        assert [t.term for t in articles[0].tags] == ["python", "tutorial"]
 
     @respx.mock
     @pytest.mark.asyncio

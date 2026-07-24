@@ -5,7 +5,7 @@ import pytest
 import respx
 from httpx import Response
 from resumesh_scrapers.exceptions import SubstackScraperError
-from resumesh_scrapers.models import ArticlePlatform, ScrapedArticle
+from resumesh_scrapers.models import SubstackEntryModel
 from resumesh_scrapers.platforms.substack import SubstackScraperService
 
 SAMPLE_SUBSTACK_FEED = """\
@@ -47,10 +47,9 @@ class TestSubstackScraperFetchData:
         articles = await scraper.fetch_data("atacan")
 
         assert len(articles) == 2
-        assert all(isinstance(a, ScrapedArticle) for a in articles)
+        assert all(isinstance(a, SubstackEntryModel) for a in articles)
         assert articles[0].title == "My Substack Article"
-        assert articles[0].platform == ArticlePlatform.SUBSTACK
-        assert articles[0].reading_time_minutes == 1  # 10 words / 200 = 0 -> min 1
+        assert articles[0].link == "https://atacan.substack.com/p/my-substack-article"
 
     @respx.mock
     @pytest.mark.asyncio

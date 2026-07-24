@@ -53,7 +53,7 @@ class MediumScraperService(IScraperService):
         """
         # Clean UTM and tracking parameters from URL
         clean_url = entry.link.split("?")[0]
-        tags = [t.term for t in entry.tags] if entry.get("tags") else []
+        tags = [{"term": t.term} for t in entry.tags] if entry.get("tags") else []
         raw_summary = entry.get("summary", "") or ""
         clean_summary = re.sub(r"<[^>]+>", "", raw_summary).strip()
         clean_summary = html.unescape(clean_summary)
