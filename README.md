@@ -57,7 +57,9 @@ from resumesh_scrapers import (
     SubstackScraper,
     BehanceScraper,
     GitHubRepositoryModel,
-    ScrapedArticle,
+    DevToArticleModel,
+    MediumEntryModel,
+    SubstackEntryModel,
     BehanceProjectModel,
 )
 
@@ -73,17 +75,20 @@ async def main():
 
     # 2. Scraping Dev.to Articles
     devto = DevToScraper()
-    devto_posts: list[ScrapedArticle] = await devto.fetch_data("atacanymc")
+    devto_posts: list[DevToArticleModel] = await devto.fetch_data("atacanymc")
     print(f"Fetched {len(devto_posts)} Dev.to articles.")
 
     # 3. Scraping Substack Publications
     substack = SubstackScraper()
-    substack_posts: list[ScrapedArticle] = await substack.fetch_data("atacan")
+    substack_posts: list[SubstackEntryModel] = await substack.fetch_data("atacan")
     print(f"Fetched {len(substack_posts)} Substack posts.")
 
     # 4. Scraping Behance Projects
     behance = BehanceScraper()
-    behance_projects: list[BehanceProjectModel] = await behance.fetch_data("atacanymc")
+    behance_projects: list[BehanceProjectModel] = await behance.fetch_data(
+        username="atacanymc",
+        api_key="your_behance_api_key"  # optional, falls back to HTML scraping if not provided
+    )
     print(f"Fetched {len(behance_projects)} Behance projects.")
 
 if __name__ == "__main__":
@@ -112,7 +117,9 @@ src/resumesh_scrapers/
 │   └── __init__.py
 └── models/                     # Platform-specific Pydantic validation schemas
     ├── github.py
-    ├── article.py              # Dev.to, Medium, Substack shared schemas
+    ├── devto.py
+    ├── medium.py
+    ├── substack.py
     ├── behance.py
     ├── npm.py
     ├── pypi.py
@@ -126,10 +133,10 @@ src/resumesh_scrapers/
 | Platform | Scraper Class | Response Model | Captured Data Features |
 |---|---|---|---|
 | **GitHub** | `GitHubScraper` | `GitHubRepositoryModel` | Stars, Forks, Main languages, Visibility, Watchers, Creation dates |
-| **Dev.to** | `DevToScraper` | `ScrapedArticle` | Title, URL, Tags, Reading time, Publishing date |
-| **Medium** | `MediumScraper` | `ScrapedArticle` | Title, RSS Summary, UTM-stripped URL, Category tags |
-| **Substack** | `SubstackScraper` | `ScrapedArticle` | Title, RSS Summary, URL, Reading time estimation |
-| **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates |
+| **Dev.to** | `DevToScraper` | `DevToArticleModel` | Title, URL, Tags, Reading time, Publishing date |
+| **Medium** | `MediumScraper` | `MediumEntryModel` | Title, RSS Summary, UTM-stripped link, Category tags |
+| **Substack** | `SubstackScraper` | `SubstackEntryModel` | Title, RSS Summary, link, tags |
+| **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates (supports API client keys) |
 | **NPM** | `NpmScraper` | `NpmSearchResultModel` | Maintainer packages, keywords, version history, publisher metadata |
 | **PyPI** | `PyPIScraper` | `PyPiPackageModel` | Releases, download statistics, license, project metadata |
 
