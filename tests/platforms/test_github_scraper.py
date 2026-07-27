@@ -8,7 +8,6 @@ from resumesh_scrapers.exceptions import GitHubScraperError
 from resumesh_scrapers.models import GitHubCommitModel, GitHubRepositoryModel
 from resumesh_scrapers.platforms import GitHubScraperService
 
-
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
 SAMPLE_REPOS = [
@@ -54,40 +53,25 @@ SAMPLE_COMMITS = {
         {
             "sha": "abcdef1234567890",
             "commit": {
-                "author": {
-                    "name": "Octocat",
-                    "email": "octocat@github.com",
-                    "date": "2026-07-27T12:00:00Z"
-                },
+                "author": {"name": "Octocat", "email": "octocat@github.com", "date": "2026-07-27T12:00:00Z"},
                 "message": "feat: add super cool feature",
-                "url": "https://api.github.com/repos/octocat/ResuMesh/git/commits/abcdef1234567890"
+                "url": "https://api.github.com/repos/octocat/ResuMesh/git/commits/abcdef1234567890",
             },
             "html_url": "https://github.com/octocat/ResuMesh/commit/abcdef1234567890",
-            "repository": {
-                "name": "ResuMesh",
-                "full_name": "octocat/ResuMesh"
-            }
+            "repository": {"name": "ResuMesh", "full_name": "octocat/ResuMesh"},
         },
         {
             "sha": "1234567890abcdef",
             "commit": {
-                "author": {
-                    "name": "Octocat",
-                    "email": "octocat@github.com",
-                    "date": "2026-07-26T15:30:00Z"
-                },
+                "author": {"name": "Octocat", "email": "octocat@github.com", "date": "2026-07-26T15:30:00Z"},
                 "message": "fix: resolve bug",
-                "url": "https://api.github.com/repos/octocat/ResuMesh/git/commits/1234567890abcdef"
+                "url": "https://api.github.com/repos/octocat/ResuMesh/git/commits/1234567890abcdef",
             },
             "html_url": "https://github.com/octocat/ResuMesh/commit/1234567890abcdef",
-            "repository": {
-                "name": "ResuMesh",
-                "full_name": "octocat/ResuMesh"
-            }
-        }
-    ]
+            "repository": {"name": "ResuMesh", "full_name": "octocat/ResuMesh"},
+        },
+    ],
 }
-
 
 
 @pytest.fixture
@@ -168,9 +152,7 @@ class TestGitHubScraperFetchReadmeRepo:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_readme_repo_success(self, scraper):
-        respx.get("https://api.github.com/repos/octocat/octocat").mock(
-            return_value=Response(200, json=SAMPLE_REPOS[0])
-        )
+        respx.get("https://api.github.com/repos/octocat/octocat").mock(return_value=Response(200, json=SAMPLE_REPOS[0]))
 
         repo = await scraper.fetch_readme_repo("octocat")
         assert repo is not None
@@ -179,9 +161,7 @@ class TestGitHubScraperFetchReadmeRepo:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_readme_repo_not_found(self, scraper):
-        respx.get("https://api.github.com/repos/octocat/octocat").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://api.github.com/repos/octocat/octocat").mock(return_value=Response(404, text="Not Found"))
 
         repo = await scraper.fetch_readme_repo("octocat")
         assert repo is None
@@ -202,12 +182,7 @@ class TestGitHubScraperFetchCommits:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_commits_success(self, scraper):
-        respx.get("https://api.github.com/search/commits").mock(
-            return_value=Response(200, json=SAMPLE_COMMITS)
-        )
-
-        commits = await scraper.fetch_data("octocat")  # Wait, wait! The method name is fetch_commits!
-        # Let's verify: we want to call fetch_commits!
+        respx.get("https://api.github.com/search/commits").mock(return_value=Response(200, json=SAMPLE_COMMITS))
         commits = await scraper.fetch_commits("octocat")
 
         assert len(commits) == 2
@@ -232,9 +207,7 @@ class TestGitHubScraperFetchCommits:
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_commits_http_error(self, scraper):
-        respx.get("https://api.github.com/search/commits").mock(
-            return_value=Response(404, text="Not Found")
-        )
+        respx.get("https://api.github.com/search/commits").mock(return_value=Response(404, text="Not Found"))
 
         with pytest.raises(GitHubScraperError) as exc_info:
             await scraper.fetch_commits("octocat")
@@ -248,8 +221,6 @@ class TestGitHubScraperFetchCommits:
 
 
 class TestGitHubScraperParseRepo:
-
-
     def test_parse_repo_fields(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[0])
 

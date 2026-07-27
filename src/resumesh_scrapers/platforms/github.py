@@ -29,7 +29,6 @@ from resumesh_scrapers.exceptions import GitHubScraperError
 from resumesh_scrapers.models import GitHubCommitModel, GitHubRepositoryModel
 from resumesh_scrapers.platforms.base import IScraperService
 
-
 logger = logging.getLogger(__name__)
 
 _GITHUB_API_BASE = "https://api.github.com"
@@ -274,5 +273,3 @@ class GitHubScraperService(IScraperService):
 
 # Alias for backward compatibility
 GitHubScraper = GitHubScraperService
-
-

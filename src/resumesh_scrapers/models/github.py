@@ -70,4 +70,3 @@ class GitHubCommitModel(BaseModel):
     html_url: str
 
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
-

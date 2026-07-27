@@ -12,7 +12,6 @@ __all__ = [
     "GitHubScraper",
     "GitHubScraperService",
     "MediumScraper",
-
     "MediumScraperService",
     "DevToScraper",
     "DevToScraperService",
@@ -25,4 +24,3 @@ __all__ = [
     "PyPIScraperService",
     "PyPIScraper",
 ]
-

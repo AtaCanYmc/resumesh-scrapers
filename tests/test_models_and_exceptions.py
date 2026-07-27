@@ -14,13 +14,13 @@ from resumesh_scrapers.models import (
     SubstackEntryModel,
 )
 
-
 # ── Models ──────────────────────────────────────────────────────────────────
 
 
 class TestGitHubCommitModel:
     def test_minimal(self):
         from datetime import datetime
+
         commit = GitHubCommitModel(
             sha="abcdef123456",
             message="feat: support commits",
@@ -35,7 +35,6 @@ class TestGitHubCommitModel:
         assert commit.message == "feat: support commits"
         assert commit.author_name == "Ata Can"
         assert commit.repo_name == "resumesh-scrapers"
-
 
 
 class TestScrapedProject:

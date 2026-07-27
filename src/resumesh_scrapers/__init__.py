@@ -49,7 +49,6 @@ __all__ = [
     "GitHubScraperService",
     "GitHubScraper",
     "DevToScraperService",
-
     "DevToScraper",
     "MediumScraperService",
     "MediumScraper",
@@ -66,7 +65,6 @@ __all__ = [
     "GitHubLicense",
     "GitHubRepositoryModel",
     "GitHubCommitModel",
-
     "MediumEntryModel",
     "SubstackEntryModel",
     "BehanceProjectModel",

@@ -38,7 +38,6 @@ __all__ = [
     "GitHubOwner",
     "GitHubRepositoryModel",
     "GitHubCommitModel",
-
     "NpmDownloads",
     "NpmFlags",
     "NpmLinks",
