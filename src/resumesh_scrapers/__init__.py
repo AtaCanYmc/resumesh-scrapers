@@ -14,6 +14,7 @@ from resumesh_scrapers.exceptions import (
 from resumesh_scrapers.models import (
     BehanceProjectModel,
     DevToArticleModel,
+    GitHubCommitModel,
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
@@ -63,6 +64,7 @@ __all__ = [
     "GitHubOwner",
     "GitHubLicense",
     "GitHubRepositoryModel",
+    "GitHubCommitModel",
     "MediumEntryModel",
     "SubstackEntryModel",
     "BehanceProjectModel",

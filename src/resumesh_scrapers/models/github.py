@@ -55,3 +55,18 @@ class GitHubRepositoryModel(BaseModel):
     default_branch: str = "main"
 
     model_config = ConfigDict(extra="ignore", populate_by_name=True)
+
+
+class GitHubCommitModel(BaseModel):
+    """Pydantic model for commit data fetched by the GitHub commits scraper."""
+
+    sha: str
+    message: str
+    author_name: str
+    author_email: str
+    date: datetime
+    repo_name: str
+    repo_full_name: str
+    html_url: str
+
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)

@@ -20,11 +20,13 @@ API Reference:
 
 import logging
 import re
+import urllib.parse
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.models import GitHubRepositoryModel
+from resumesh_scrapers.models import GitHubCommitModel, GitHubRepositoryModel
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -130,6 +132,143 @@ class GitHubScraperService(IScraperService):
             username,
         )
         return projects
+
+    async def fetch_readme_repo(self, username: str, **kwargs) -> Optional[GitHubRepositoryModel]:
+        """
+        Fetches the user's special profile README repository (username/username).
+        If the repository does not exist, returns None.
+
+        Args:
+            username: GitHub username.
+            pat: Personal Access Token (optional).
+
+        Returns:
+            GitHubRepositoryModel if repository exists, otherwise None.
+
+        Raises:
+            GitHubScraperError: If API request fails with a status code other than 404.
+        """
+        if not re.match(r"^[a-zA-Z0-9\-]+$", username):
+            raise GitHubScraperError("Invalid GitHub username format.")
+
+        pat = kwargs.get("pat")
+        url = f"{_GITHUB_API_BASE}/repos/{username}/{username}"
+        headers = GitHubScraperService._build_headers(pat)
+
+        logger.info("[GITHUB] Fetching README repo for user=%s", username)
+
+        try:
+            response = await fetch_url(
+                url=url,
+                headers=headers,
+                timeout=_DEFAULT_TIMEOUT,
+                error_class=GitHubScraperError,
+                platform_name="GITHUB",
+            )
+        except GitHubScraperError as exc:
+            if exc.status_code == 404:
+                logger.info("[GITHUB] README repo not found for user=%s", username)
+                return None
+            raise
+
+        raw_repo = response.json()
+        return GitHubScraperService._parse_repo(raw_repo)
+
+    @staticmethod
+    def _parse_commit(raw_item: dict) -> GitHubCommitModel:
+        """
+        Converts a single commit item search response into ``GitHubCommitModel``.
+        """
+        sha = raw_item.get("sha", "")
+        commit_data = raw_item.get("commit", {})
+        author_data = commit_data.get("author", {})
+        repo_data = raw_item.get("repository", {})
+
+        date_str = author_data.get("date")
+        if date_str:
+            date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+        else:
+            date = datetime.now(timezone.utc)
+
+        return GitHubCommitModel(
+            sha=sha,
+            message=commit_data.get("message", ""),
+            author_name=author_data.get("name", ""),
+            author_email=author_data.get("email", ""),
+            date=date,
+            repo_name=repo_data.get("name", ""),
+            repo_full_name=repo_data.get("full_name", ""),
+            html_url=raw_item.get("html_url", ""),
+        )
+
+    async def fetch_commits(self, username: str, **kwargs) -> list[GitHubCommitModel]:
+        """
+        Fetches the user's GitHub commits.
+
+        Args:
+            username: GitHub username.
+            pat: Personal Access Token (optional).
+            since: datetime or ISO string (optional). Defaults to 7 days ago.
+            until: datetime or ISO string (optional).
+
+        Returns:
+            List of ``GitHubCommitModel`` objects.
+
+        Raises:
+            GitHubScraperError: If API request fails.
+        """
+        if not re.match(r"^[a-zA-Z0-9\-]+$", username):
+            raise GitHubScraperError("Invalid GitHub username format.")
+
+        pat = kwargs.get("pat")
+        since = kwargs.get("since")
+        until = kwargs.get("until")
+
+        # Default to 7 days ago
+        if not since:
+            since_dt = datetime.now(timezone.utc) - timedelta(days=7)
+            since_str = since_dt.isoformat()
+        elif isinstance(since, datetime):
+            since_str = since.isoformat()
+        else:
+            since_str = str(since)
+
+        query = f"author:{username} author-date:>={since_str}"
+
+        if until:
+            if isinstance(until, datetime):
+                until_str = until.isoformat()
+            else:
+                until_str = str(until)
+            query += f" author-date:<={until_str}"
+
+        params = {"q": query, "sort": "author-date", "order": "desc", "per_page": "100"}
+        encoded_query = urllib.parse.urlencode(params)
+        url = f"{_GITHUB_API_BASE}/search/commits?{encoded_query}"
+        # We need commit search media type, but for repos we only need standard.
+        # Let's request application/vnd.github+json which works for commits as well as repos.
+        headers = {
+            "User-Agent": "ResuMesh-App",
+            "Accept": "application/vnd.github+json",
+        }
+        if pat:
+            headers["Authorization"] = f"Bearer {pat}"
+
+        logger.info("[GITHUB] Fetching commits for user=%s, since=%s", username, since_str)
+
+        response = await fetch_url(
+            url=url,
+            headers=headers,
+            timeout=_DEFAULT_TIMEOUT,
+            error_class=GitHubScraperError,
+            platform_name="GITHUB_COMMITS",
+        )
+
+        raw_data = response.json()
+        items = raw_data.get("items", [])
+        logger.info("[GITHUB] Received %d commits for user=%s", len(items), username)
+
+        return [GitHubScraperService._parse_commit(item) for item in items]
 
 
 # Alias for backward compatibility
