@@ -7,10 +7,35 @@ from resumesh_scrapers.exceptions import (
     MediumScraperError,
     ScraperError,
 )
-from resumesh_scrapers.models import GitHubRepositoryModel, MediumEntryModel, SubstackEntryModel
+from resumesh_scrapers.models import (
+    GitHubCommitModel,
+    GitHubRepositoryModel,
+    MediumEntryModel,
+    SubstackEntryModel,
+)
 
 
 # ── Models ──────────────────────────────────────────────────────────────────
+
+
+class TestGitHubCommitModel:
+    def test_minimal(self):
+        from datetime import datetime
+        commit = GitHubCommitModel(
+            sha="abcdef123456",
+            message="feat: support commits",
+            author_name="Ata Can",
+            author_email="ata@example.com",
+            date=datetime(2026, 7, 27, 12, 0, 0),
+            repo_name="resumesh-scrapers",
+            repo_full_name="AtaCanYmc/resumesh-scrapers",
+            html_url="https://github.com/AtaCanYmc/resumesh-scrapers/commit/abcdef123456",
+        )
+        assert commit.sha == "abcdef123456"
+        assert commit.message == "feat: support commits"
+        assert commit.author_name == "Ata Can"
+        assert commit.repo_name == "resumesh-scrapers"
+
 
 
 class TestScrapedProject:

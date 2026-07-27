@@ -1,6 +1,7 @@
 from resumesh_scrapers.models.behance import BehanceProjectModel
 from resumesh_scrapers.models.devto import DevToArticleModel
 from resumesh_scrapers.models.github import (
+    GitHubCommitModel,
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
@@ -36,6 +37,8 @@ __all__ = [
     "GitHubLicense",
     "GitHubOwner",
     "GitHubRepositoryModel",
+    "GitHubCommitModel",
+
     "NpmDownloads",
     "NpmFlags",
     "NpmLinks",
