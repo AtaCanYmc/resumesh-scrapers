@@ -26,7 +26,11 @@ from typing import Optional
 
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.models import GitHubCommitModel, GitHubRepositoryModel
+from resumesh_scrapers.models import (
+    GitHubCommitModel,
+    GitHubRepositoryModel,
+    GitHubUserModel,
+)
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -269,6 +273,80 @@ class GitHubScraperService(IScraperService):
         logger.info("[GITHUB] Received %d commits for user=%s", len(items), username)
 
         return [GitHubScraperService._parse_commit(item) for item in items]
+
+    async def fetch_followers(self, username: str, **kwargs) -> list[GitHubUserModel]:
+        """
+        Fetches the user's followers list.
+
+        Args:
+            username: GitHub username.
+            pat: Personal Access Token (optional).
+            per_page: Results per page (optional, default 100).
+
+        Returns:
+            List of ``GitHubUserModel`` objects.
+
+        Raises:
+            GitHubScraperError: If API request fails.
+        """
+        if not re.match(r"^[a-zA-Z0-9\-]+$", username):
+            raise GitHubScraperError("Invalid GitHub username format.")
+
+        pat = kwargs.get("pat")
+        per_page = kwargs.get("per_page", 100)
+
+        url = f"{_GITHUB_API_BASE}/users/{username}/followers?per_page={per_page}"
+        headers = GitHubScraperService._build_headers(pat)
+
+        logger.info("[GITHUB] Fetching followers for user=%s", username)
+
+        response = await fetch_url(
+            url=url,
+            headers=headers,
+            timeout=_DEFAULT_TIMEOUT,
+            error_class=GitHubScraperError,
+            platform_name="GITHUB",
+        )
+
+        raw_users = response.json()
+        return [GitHubUserModel(**raw) for raw in raw_users]
+
+    async def fetch_following(self, username: str, **kwargs) -> list[GitHubUserModel]:
+        """
+        Fetches the list of users that the target user follows.
+
+        Args:
+            username: GitHub username.
+            pat: Personal Access Token (optional).
+            per_page: Results per page (optional, default 100).
+
+        Returns:
+            List of ``GitHubUserModel`` objects.
+
+        Raises:
+            GitHubScraperError: If API request fails.
+        """
+        if not re.match(r"^[a-zA-Z0-9\-]+$", username):
+            raise GitHubScraperError("Invalid GitHub username format.")
+
+        pat = kwargs.get("pat")
+        per_page = kwargs.get("per_page", 100)
+
+        url = f"{_GITHUB_API_BASE}/users/{username}/following?per_page={per_page}"
+        headers = GitHubScraperService._build_headers(pat)
+
+        logger.info("[GITHUB] Fetching following list for user=%s", username)
+
+        response = await fetch_url(
+            url=url,
+            headers=headers,
+            timeout=_DEFAULT_TIMEOUT,
+            error_class=GitHubScraperError,
+            platform_name="GITHUB",
+        )
+
+        raw_users = response.json()
+        return [GitHubUserModel(**raw) for raw in raw_users]
 
 
 # Alias for backward compatibility

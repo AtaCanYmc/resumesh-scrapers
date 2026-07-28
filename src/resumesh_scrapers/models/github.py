@@ -4,8 +4,8 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
-class GitHubOwner(BaseModel):
-    """Represents the owner details of a GitHub repository."""
+class GitHubUserModel(BaseModel):
+    """Represents the profile summary of a GitHub user."""
 
     login: str
     id: int
@@ -14,6 +14,14 @@ class GitHubOwner(BaseModel):
     html_url: HttpUrl
     type: str
     site_admin: bool
+
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+
+
+class GitHubOwner(GitHubUserModel):
+    """Represents the owner details of a GitHub repository."""
+
+    pass
 
 
 class GitHubLicense(BaseModel):

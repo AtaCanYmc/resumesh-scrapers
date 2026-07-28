@@ -10,11 +10,27 @@ from resumesh_scrapers.exceptions import (
 from resumesh_scrapers.models import (
     GitHubCommitModel,
     GitHubRepositoryModel,
+    GitHubUserModel,
     MediumEntryModel,
     SubstackEntryModel,
 )
 
 # ── Models ──────────────────────────────────────────────────────────────────
+
+
+class TestGitHubUserModel:
+    def test_minimal(self):
+        user = GitHubUserModel(
+            login="octocat",
+            id=1,
+            node_id="MDQ6VXNlcjE=",
+            avatar_url="https://github.com/images/error/octocat_happy.gif",
+            html_url="https://github.com/octocat",
+            type="User",
+            site_admin=False,
+        )
+        assert user.login == "octocat"
+        assert user.id == 1
 
 
 class TestGitHubCommitModel:

@@ -57,6 +57,8 @@ from resumesh_scrapers import (
     SubstackScraper,
     BehanceScraper,
     GitHubRepositoryModel,
+    GitHubCommitModel,
+    GitHubUserModel,
     DevToArticleModel,
     MediumEntryModel,
     SubstackEntryModel,
@@ -64,7 +66,7 @@ from resumesh_scrapers import (
 )
 
 async def main():
-    # 1. Scraping GitHub Repositories
+    # 1. Scraping GitHub Repositories, README Repos, Commits, and User Lists
     github = GitHubScraper()
     repos: list[GitHubRepositoryModel] = await github.fetch_data(
         username="octocat",
@@ -72,6 +74,20 @@ async def main():
         include_forks=False
     )
     print(f"Fetched {len(repos)} repositories.")
+
+    # Fetch profile README repository details
+    readme_repo = await github.fetch_readme_repo("octocat")
+    if readme_repo:
+        print(f"Profile README Repository: {readme_repo.html_url}")
+
+    # Fetch recent commits (default since: last 7 days)
+    commits: list[GitHubCommitModel] = await github.fetch_commits("octocat")
+    print(f"Fetched {len(commits)} commits.")
+
+    # Fetch followers and following list
+    followers: list[GitHubUserModel] = await github.fetch_followers("octocat", per_page=10)
+    print(f"Fetched {len(followers)} followers.")
+
 
     # 2. Scraping Dev.to Articles
     devto = DevToScraper()
@@ -132,8 +148,9 @@ src/resumesh_scrapers/
 
 | Platform | Scraper Class | Response Model | Captured Data Features |
 |---|---|---|---|
-| **GitHub** | `GitHubScraper` | `GitHubRepositoryModel` | Stars, Forks, Main languages, Visibility, Watchers, Creation dates |
+| **GitHub** | `GitHubScraper` | `GitHubRepositoryModel`<br>`GitHubCommitModel`<br>`GitHubUserModel` | **Repos:** Stars, Forks, languages, watchers.<br>**Commits:** author, message, sha, repo, date, HTML link.<br>**Users:** login, avatar URL, HTML link (followers/following). |
 | **Dev.to** | `DevToScraper` | `DevToArticleModel` | Title, URL, Tags, Reading time, Publishing date |
+
 | **Medium** | `MediumScraper` | `MediumEntryModel` | Title, RSS Summary, UTM-stripped link, Category tags |
 | **Substack** | `SubstackScraper` | `SubstackEntryModel` | Title, RSS Summary, link, tags |
 | **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates (supports API client keys) |
