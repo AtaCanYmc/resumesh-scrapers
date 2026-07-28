@@ -150,7 +150,6 @@ src/resumesh_scrapers/
 |---|---|---|---|
 | **GitHub** | `GitHubScraper` | `GitHubRepositoryModel`<br>`GitHubCommitModel`<br>`GitHubUserModel` | **Repos:** Stars, Forks, languages, watchers.<br>**Commits:** author, message, sha, repo, date, HTML link.<br>**Users:** login, avatar URL, HTML link (followers/following). |
 | **Dev.to** | `DevToScraper` | `DevToArticleModel` | Title, URL, Tags, Reading time, Publishing date |
-
 | **Medium** | `MediumScraper` | `MediumEntryModel` | Title, RSS Summary, UTM-stripped link, Category tags |
 | **Substack** | `SubstackScraper` | `SubstackEntryModel` | Title, RSS Summary, link, tags |
 | **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates (supports API client keys) |
