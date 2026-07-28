@@ -5,8 +5,13 @@ import pytest
 import respx
 from httpx import Response
 from resumesh_scrapers.exceptions import GitHubScraperError
-from resumesh_scrapers.models import GitHubCommitModel, GitHubRepositoryModel
+from resumesh_scrapers.models import (
+    GitHubCommitModel,
+    GitHubRepositoryModel,
+    GitHubUserModel,
+)
 from resumesh_scrapers.platforms import GitHubScraperService
+
 
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -72,6 +77,28 @@ SAMPLE_COMMITS = {
         },
     ],
 }
+
+SAMPLE_USERS = [
+    {
+        "login": "octocat",
+        "id": 1,
+        "node_id": "MDQ6VXNlcjE=",
+        "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+        "html_url": "https://github.com/octocat",
+        "type": "User",
+        "site_admin": False,
+    },
+    {
+        "login": "torvalds",
+        "id": 2,
+        "node_id": "MDQ6VXNlcjI=",
+        "avatar_url": "https://github.com/images/error/torvalds.gif",
+        "html_url": "https://github.com/torvalds",
+        "type": "User",
+        "site_admin": False,
+    },
+]
+
 
 
 @pytest.fixture
@@ -220,7 +247,70 @@ class TestGitHubScraperFetchCommits:
             await scraper.fetch_commits("invalid user!")
 
 
+class TestGitHubScraperFetchFollowers:
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_followers_success(self, scraper):
+        respx.get("https://api.github.com/users/octocat/followers?per_page=100").mock(
+            return_value=Response(200, json=SAMPLE_USERS)
+        )
+
+        followers = await scraper.fetch_followers("octocat")
+        assert len(followers) == 2
+        assert all(isinstance(u, GitHubUserModel) for u in followers)
+        assert followers[0].login == "octocat"
+        assert followers[1].login == "torvalds"
+
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_followers_http_error(self, scraper):
+        respx.get("https://api.github.com/users/octocat/followers?per_page=100").mock(
+            return_value=Response(404, text="Not Found")
+        )
+
+        with pytest.raises(GitHubScraperError) as exc_info:
+            await scraper.fetch_followers("octocat")
+        assert exc_info.value.status_code == 404
+
+    @pytest.mark.asyncio
+    async def test_invalid_username_followers(self, scraper):
+        with pytest.raises(GitHubScraperError, match="Invalid GitHub username"):
+            await scraper.fetch_followers("invalid user!")
+
+
+class TestGitHubScraperFetchFollowing:
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_following_success(self, scraper):
+        respx.get("https://api.github.com/users/octocat/following?per_page=100").mock(
+            return_value=Response(200, json=SAMPLE_USERS)
+        )
+
+        following = await scraper.fetch_following("octocat")
+        assert len(following) == 2
+        assert all(isinstance(u, GitHubUserModel) for u in following)
+        assert following[0].login == "octocat"
+        assert following[1].login == "torvalds"
+
+    @respx.mock
+    @pytest.mark.asyncio
+    async def test_fetch_following_http_error(self, scraper):
+        respx.get("https://api.github.com/users/octocat/following?per_page=100").mock(
+            return_value=Response(500, text="Server Error")
+        )
+
+        with pytest.raises(GitHubScraperError) as exc_info:
+            await scraper.fetch_following("octocat")
+        assert exc_info.value.status_code == 500
+
+    @pytest.mark.asyncio
+    async def test_invalid_username_following(self, scraper):
+        with pytest.raises(GitHubScraperError, match="Invalid GitHub username"):
+            await scraper.fetch_following("invalid user!")
+
+
 class TestGitHubScraperParseRepo:
+
     def test_parse_repo_fields(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[0])
 

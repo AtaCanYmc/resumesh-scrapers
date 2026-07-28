@@ -18,6 +18,7 @@ from resumesh_scrapers.models import (
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
+    GitHubUserModel,
     MediumEntryModel,
     NpmSearchResultModel,
     PyPiPackageModel,
@@ -65,6 +66,8 @@ __all__ = [
     "GitHubLicense",
     "GitHubRepositoryModel",
     "GitHubCommitModel",
+    "GitHubUserModel",
+
     "MediumEntryModel",
     "SubstackEntryModel",
     "BehanceProjectModel",

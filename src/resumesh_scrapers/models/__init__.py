@@ -5,6 +5,7 @@ from resumesh_scrapers.models.github import (
     GitHubLicense,
     GitHubOwner,
     GitHubRepositoryModel,
+    GitHubUserModel,
 )
 from resumesh_scrapers.models.medium import MediumEntryModel
 from resumesh_scrapers.models.npm import (
@@ -38,6 +39,8 @@ __all__ = [
     "GitHubOwner",
     "GitHubRepositoryModel",
     "GitHubCommitModel",
+    "GitHubUserModel",
+
     "NpmDownloads",
     "NpmFlags",
     "NpmLinks",
