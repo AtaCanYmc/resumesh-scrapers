@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.4.0...v0.5.0) (2026-07-28)
+
+
+### Features
+
+* add GitHubCommitModel and implement commit fetching in GitHub scraper ([c34c3fd](https://github.com/AtaCanYmc/resumesh-scrapers/commit/c34c3fd0bc62aa44a81acb29df42c6d3f5565f83))
+* add GitHubUserModel and implement fetching of followers and fol… ([b3d3670](https://github.com/AtaCanYmc/resumesh-scrapers/commit/b3d3670705750f080fdb5b03165f2ffdfb011fbc))
+* add GitHubUserModel and implement fetching of followers and following in GitHub scraper ([7fec847](https://github.com/AtaCanYmc/resumesh-scrapers/commit/7fec84770b815893323e9d8b45aec2136e6f0675))
+
 ## [0.4.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.3.0...v0.4.0) (2026-07-24)
 
 
