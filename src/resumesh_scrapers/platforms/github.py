@@ -31,7 +31,6 @@ from resumesh_scrapers.models import (
     GitHubRepositoryModel,
     GitHubUserModel,
 )
-
 from resumesh_scrapers.platforms.base import IScraperService
 
 logger = logging.getLogger(__name__)
@@ -352,4 +351,3 @@ class GitHubScraperService(IScraperService):
 
 # Alias for backward compatibility
 GitHubScraper = GitHubScraperService
-

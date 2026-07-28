@@ -34,7 +34,6 @@ class TestGitHubUserModel:
 
 
 class TestGitHubCommitModel:
-
     def test_minimal(self):
         from datetime import datetime
 

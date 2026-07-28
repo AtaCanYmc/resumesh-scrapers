@@ -40,7 +40,6 @@ __all__ = [
     "GitHubRepositoryModel",
     "GitHubCommitModel",
     "GitHubUserModel",
-
     "NpmDownloads",
     "NpmFlags",
     "NpmLinks",

@@ -67,7 +67,6 @@ __all__ = [
     "GitHubRepositoryModel",
     "GitHubCommitModel",
     "GitHubUserModel",
-
     "MediumEntryModel",
     "SubstackEntryModel",
     "BehanceProjectModel",

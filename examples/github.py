@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
-    username = "octocat"
+    username = "AtaCanYmc"
     try:
         logger.info(f"Fetching GitHub data for: {username}")
         github_scraper = GitHubScraper()
@@ -48,4 +48,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

@@ -12,7 +12,6 @@ from resumesh_scrapers.models import (
 )
 from resumesh_scrapers.platforms import GitHubScraperService
 
-
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
 SAMPLE_REPOS = [
@@ -98,7 +97,6 @@ SAMPLE_USERS = [
         "site_admin": False,
     },
 ]
-
 
 
 @pytest.fixture
@@ -310,7 +308,6 @@ class TestGitHubScraperFetchFollowing:
 
 
 class TestGitHubScraperParseRepo:
-
     def test_parse_repo_fields(self):
         project = GitHubScraperService._parse_repo(SAMPLE_REPOS[0])
 

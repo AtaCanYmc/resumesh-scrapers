@@ -20,8 +20,8 @@ class GitHubUserModel(BaseModel):
 
 class GitHubOwner(GitHubUserModel):
     """Represents the owner details of a GitHub repository."""
-    pass
 
+    pass
 
 
 class GitHubLicense(BaseModel):
