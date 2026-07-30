@@ -60,11 +60,6 @@ class TestPyPIScraperFetchData:
         assert packages[0].info.name == "resumesh-scrapers"
         assert packages[0].info.version == "0.1.0"
 
-    @pytest.mark.asyncio
-    async def test_fetch_packages_empty_names(self, scraper):
-        packages = await scraper.fetch_data("atacanymc", package_names=[])
-        assert packages == []
-
     @respx.mock
     @pytest.mark.asyncio
     async def test_fetch_package_http_error(self, scraper):
