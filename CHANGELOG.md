@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.6.0...v0.7.0) (2026-07-30)
+
+
+### Features
+
+* **pypi:** add package name fetching from PyPI user page ([1664b5a](https://github.com/AtaCanYmc/resumesh-scrapers/commit/1664b5a6242ec976e9f088957912f8b773b371a0))
+
 ## [0.6.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.5.0...v0.6.0) (2026-07-28)
 
 
