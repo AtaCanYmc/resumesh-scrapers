@@ -18,7 +18,9 @@ API Reference:
 import logging
 import re
 from typing import List
+
 from bs4 import BeautifulSoup
+
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import PyPIScraperError
 from resumesh_scrapers.models import PyPiPackageModel
@@ -46,10 +48,7 @@ class PyPIScraperService(IScraperService):
         response = await fetch_url(url=url, timeout=_DEFAULT_TIMEOUT)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        packages = [
-            h3.text.strip()
-            for h3 in soup.find_all("h3", class_="package-snippet__title")
-        ]
+        packages = [h3.text.strip() for h3 in soup.find_all("h3", class_="package-snippet__title")]
 
         return packages
 
