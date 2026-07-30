@@ -18,7 +18,7 @@ API Reference:
 import logging
 import re
 from typing import List
-
+from bs4 import BeautifulSoup
 from resumesh_scrapers.core.client import fetch_url
 from resumesh_scrapers.exceptions import PyPIScraperError
 from resumesh_scrapers.models import PyPiPackageModel
@@ -27,6 +27,7 @@ from resumesh_scrapers.platforms.base import IScraperService
 logger = logging.getLogger(__name__)
 
 _PYPI_API_BASE = "https://pypi.org/pypi/{package_name}/json"
+_PYPI_API_PACKAGES = "https://pypi.org/user/{username}/"
 _DEFAULT_TIMEOUT = 15.0
 
 
@@ -34,6 +35,23 @@ class PyPIScraperService(IScraperService):
     """
     Service that fetches package metadata using the PyPI JSON API.
     """
+
+    @staticmethod
+    async def fetch_package_names(username: str):
+        """
+        Fetches package names from PyPI.
+        """
+        url = _PYPI_API_PACKAGES.format(username=username)
+
+        response = await fetch_url(url=url, timeout=_DEFAULT_TIMEOUT)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        packages = [
+            h3.text.strip()
+            for h3 in soup.find_all("h3", class_="package-snippet__title")
+        ]
+
+        return packages
 
     async def fetch_data(self, username: str, **kwargs) -> List[PyPiPackageModel]:
         """
@@ -50,12 +68,8 @@ class PyPIScraperService(IScraperService):
             PyPIScraperError: If API request fails.
         """
         package_names = kwargs.get("package_names", [])
-        if not package_names:
-            logger.warning(
-                "[PYPI] No package_names provided for user=%s. Returning empty list.",
-                username,
-            )
-            return []
+        if not package_names or len(package_names) == 0:
+            package_names = await self.fetch_package_names(username=username)
 
         projects: List[PyPiPackageModel] = []
         for pkg_name in package_names:

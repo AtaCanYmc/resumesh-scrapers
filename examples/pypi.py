@@ -10,11 +10,10 @@ logger = logging.getLogger(__name__)
 
 async def main():
     username = "atacanymc"
-    packages = ["resumesh-scrapers"]
     try:
-        logger.info(f"Fetching PyPI packages for: {username} -> {packages}")
+        logger.info(f"Fetching PyPI packages for: {username}")
         pypi_scraper = PyPIScraper()
-        pypi_data = await pypi_scraper.fetch_data(username, package_names=packages)
+        pypi_data = await pypi_scraper.fetch_data(username)
         logger.info(f"PyPI success: {len(pypi_data)} packages processed.")
         for pkg in pypi_data:
             logger.info(f"- {pkg.info.name} (v{pkg.info.version})")
