@@ -10,6 +10,7 @@ from resumesh_scrapers.exceptions import (
     RateLimitError,
     ScraperError,
     SubstackScraperError,
+    YouTubeScraperError,
 )
 from resumesh_scrapers.models import (
     BehanceProjectModel,
@@ -23,6 +24,7 @@ from resumesh_scrapers.models import (
     NpmSearchResultModel,
     PyPiPackageModel,
     SubstackEntryModel,
+    YouTubeVideoModel,
 )
 from resumesh_scrapers.platforms import (
     BehanceScraper,
@@ -40,6 +42,8 @@ from resumesh_scrapers.platforms import (
     PyPIScraperService,
     SubstackScraper,
     SubstackScraperService,
+    YouTubeScraper,
+    YouTubeScraperService,
 )
 
 __all__ = [
@@ -61,6 +65,8 @@ __all__ = [
     "NpmScraperService",
     "PyPIScraper",
     "PyPIScraperService",
+    "YouTubeScraperService",
+    "YouTubeScraper",
     # Models
     "GitHubOwner",
     "GitHubLicense",
@@ -73,6 +79,7 @@ __all__ = [
     "PyPiPackageModel",
     "NpmSearchResultModel",
     "DevToArticleModel",
+    "YouTubeVideoModel",
     # Exceptions
     "ScraperError",
     "GitHubScraperError",
@@ -81,7 +88,9 @@ __all__ = [
     "SubstackScraperError",
     "NpmScraperError",
     "PyPIScraperError",
+    "YouTubeScraperError",
     "NetworkError",
     "RateLimitError",
     "ParsingError",
 ]
+

@@ -29,6 +29,7 @@ from resumesh_scrapers.models.pypi import (
     Role,
 )
 from resumesh_scrapers.models.substack import SubstackEntryModel
+from resumesh_scrapers.models.youtube import YouTubeVideoModel
 
 __all__ = [
     "DevToArticleModel",
@@ -56,4 +57,6 @@ __all__ = [
     "PyPiPackageModel",
     "ReleaseFile",
     "Role",
+    "YouTubeVideoModel",
 ]
+

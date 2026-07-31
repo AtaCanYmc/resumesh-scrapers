@@ -6,6 +6,7 @@ from resumesh_scrapers.platforms.medium import MediumScraper, MediumScraperServi
 from resumesh_scrapers.platforms.npm import NpmScraper, NpmScraperService
 from resumesh_scrapers.platforms.pypi import PyPIScraper, PyPIScraperService
 from resumesh_scrapers.platforms.substack import SubstackScraper, SubstackScraperService
+from resumesh_scrapers.platforms.youtube import YouTubeScraper, YouTubeScraperService
 
 __all__ = [
     "IScraperService",
@@ -23,4 +24,7 @@ __all__ = [
     "NpmScraper",
     "PyPIScraperService",
     "PyPIScraper",
+    "YouTubeScraperService",
+    "YouTubeScraper",
 ]
+

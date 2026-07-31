@@ -29,7 +29,9 @@ dependencies = [
     "feedparser>=6.0",
     "tenacity>=8.0",
     "beautifulsoup4>=4.0",
+    "yt-dlp>=2024.0.0",
 ]
+
 
 [project.urls]
 Homepage = "https://github.com/AtaCanYmc/resumesh-scrapers"
