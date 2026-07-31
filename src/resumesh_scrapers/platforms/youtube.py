@@ -59,7 +59,7 @@ class YouTubeScraperService(IScraperService):
         """
         logger.info("[YOUTUBE] Extracting video metadata for url=%s", url)
         info = await asyncio.to_thread(self._extract_info, url)
-        
+
         # Ensure webpage_url or original url is set if url field is empty
         if not info.get("url"):
             info["url"] = info.get("webpage_url") or url

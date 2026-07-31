@@ -73,7 +73,6 @@ class YouTubeScraperError(ScraperError):
         super().__init__(message, status_code)
 
 
-
 class NetworkError(ScraperError):
     """Raised during network connectivity issues, timeouts, or HTTP connection errors."""
 
