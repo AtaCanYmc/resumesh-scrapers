@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.8.0...v0.9.0) (2026-07-31)
+
+
+### Features
+
+* **youtube:** add YouTube scraping functionality and model ([ef70676](https://github.com/AtaCanYmc/resumesh-scrapers/commit/ef7067655c066bb0541ceb46e3d19fd547fb5714))
+* **youtube:** add YouTube scraping service and update documentation ([b2071ba](https://github.com/AtaCanYmc/resumesh-scrapers/commit/b2071ba2ee8d7fe26ddd32a70a2dd7da8fb774be))
+
 ## [Unreleased]
 
 ### Features
