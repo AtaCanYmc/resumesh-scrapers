@@ -17,7 +17,7 @@
 
 ---
 
-`resumesh-scrapers` is a clean, modular, and robust Python library containing standalone scraping services for **GitHub**, **Dev.to**, **Medium**, **Substack**, **Behance**, **NPM**, and **PyPI** platforms. Originally developed as part of the [ResuMesh](https://github.com/AtaCanYmc/ResuMesh) ecosystem, it has been decoupled to serve as a reusable package for any resume, portfolio, or profile aggregator project.
+`resumesh-scrapers` is a clean, modular, and robust Python library containing standalone scraping services for **GitHub**, **Dev.to**, **Medium**, **Substack**, **Behance**, **NPM**, **PyPI**, and **YouTube** platforms. Originally developed as part of the [ResuMesh](https://github.com/AtaCanYmc/ResuMesh) ecosystem, it has been decoupled to serve as a reusable package for any resume, portfolio, or profile aggregator project.
 
 ## 🚀 Key Features
 
@@ -46,7 +46,7 @@ pip install -e .
 
 ## 💡 Quick Start
 
-Here is a simple example showing how to scrape your repository and blog statistics:
+Here is a simple example showing how to scrape your repository, blog statistics, and YouTube videos:
 
 ```python
 import asyncio
@@ -56,6 +56,7 @@ from resumesh_scrapers import (
     MediumScraper,
     SubstackScraper,
     BehanceScraper,
+    YouTubeScraper,
     GitHubRepositoryModel,
     GitHubCommitModel,
     GitHubUserModel,
@@ -63,6 +64,7 @@ from resumesh_scrapers import (
     MediumEntryModel,
     SubstackEntryModel,
     BehanceProjectModel,
+    YouTubeVideoModel,
 )
 
 async def main():
@@ -107,6 +109,11 @@ async def main():
     )
     print(f"Fetched {len(behance_projects)} Behance projects.")
 
+    # 5. Scraping YouTube Video Metadata
+    youtube = YouTubeScraper()
+    video_data: YouTubeVideoModel = await youtube.fetch_video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    print(f"Fetched YouTube video: {video_data.title} ({video_data.view_count:,} views)")
+
 if __name__ == "__main__":
     asyncio.run(main())
 ```
@@ -130,6 +137,7 @@ src/resumesh_scrapers/
 │   ├── behance.py
 │   ├── npm.py
 │   ├── pypi.py
+│   ├── youtube.py
 │   └── __init__.py
 └── models/                     # Platform-specific Pydantic validation schemas
     ├── github.py
@@ -139,6 +147,7 @@ src/resumesh_scrapers/
     ├── behance.py
     ├── npm.py
     ├── pypi.py
+    ├── youtube.py
     └── __init__.py
 ```
 
@@ -155,6 +164,8 @@ src/resumesh_scrapers/
 | **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates (supports API client keys) |
 | **NPM** | `NpmScraper` | `NpmSearchResultModel` | Maintainer packages, keywords, version history, publisher metadata |
 | **PyPI** | `PyPIScraper` | `PyPiPackageModel` | Releases, download statistics, license, project metadata |
+| **YouTube** | `YouTubeScraper` | `YouTubeVideoModel` | Video title, duration, view count, like count, comment count, channel info, thumbnail, tags, categories (via `yt-dlp`) |
+
 
 ---
 

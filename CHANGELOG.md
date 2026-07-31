@@ -1,6 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Features
+
+* **youtube:** add `YouTubeScraperService` and `YouTubeVideoModel` using `yt-dlp` to extract video metadata
+
 ## [0.8.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.7.0...v0.8.0) (2026-07-30)
+
 
 
 ### Features
