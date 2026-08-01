@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -10,36 +10,36 @@ class InfoDownloads(BaseModel):
 
 
 class Info(BaseModel):
-    author: str | None = None
-    author_email: str | None = None
-    bugtrack_url: str | None = None
-    classifiers: list[str] | None = None
-    description: str | None = None
-    description_content_type: str | None = None
-    docs_url: str | None = None
-    download_url: str | None = None
+    author: Optional[str] = None
+    author_email: Optional[str] = None
+    bugtrack_url: Optional[str] = None
+    classifiers: Optional[list[str]] = None
+    description: Optional[str] = None
+    description_content_type: Optional[str] = None
+    docs_url: Optional[str] = None
+    download_url: Optional[str] = None
     downloads: InfoDownloads
-    dynamic: Any | None = None
-    home_page: str | None = None
-    keywords: str | None = None
-    license: str | None = None
-    license_expression: str | None = None
-    license_files: list[str] | None = None
-    maintainer: str | None = None
-    maintainer_email: str | None = None
+    dynamic: Optional[Any] = None
+    home_page: Optional[str] = None
+    keywords: Optional[str] = None
+    license: Optional[str] = None
+    license_expression: Optional[str] = None
+    license_files: Optional[list[str]] = None
+    maintainer: Optional[str] = None
+    maintainer_email: Optional[str] = None
     name: str
-    package_url: str | None = None
-    platform: str | None = None
-    project_url: str | None = None
-    project_urls: dict[str, str] | None = None
-    provides_extra: list[str] | None = None
-    release_url: str | None = None
-    requires_dist: list[str] | None = None
-    requires_python: str | None = None
-    summary: str | None = None
+    package_url: Optional[str] = None
+    platform: Optional[str] = None
+    project_url: Optional[str] = None
+    project_urls: Optional[dict[str, str]] = None
+    provides_extra: Optional[list[str]] = None
+    release_url: Optional[str] = None
+    requires_dist: Optional[list[str]] = None
+    requires_python: Optional[str] = None
+    summary: Optional[str] = None
     version: str
     yanked: bool = False
-    yanked_reason: str | None = None
+    yanked_reason: Optional[str] = None
 
 
 class Digests(BaseModel):
@@ -49,8 +49,8 @@ class Digests(BaseModel):
 
 
 class ReleaseFile(BaseModel):
-    comment_text: str | None = None
-    core_metadata: dict | bool | None = Field(default=None, alias="core-metadata")
+    comment_text: Optional[str] = None
+    core_metadata: Optional[Union[dict, bool]] = Field(default=None, alias="core-metadata")
     digests: Digests
     downloads: int
     filename: str
@@ -58,13 +58,13 @@ class ReleaseFile(BaseModel):
     md5_digest: str
     packagetype: str
     python_version: str
-    requires_python: str | None = None
+    requires_python: Optional[str] = None
     size: int
     upload_time: str
     upload_time_iso_8601: str
     url: str
     yanked: bool
-    yanked_reason: str | None = None
+    yanked_reason: Optional[str] = None
 
 
 class Role(BaseModel):
@@ -73,7 +73,7 @@ class Role(BaseModel):
 
 
 class Ownership(BaseModel):
-    organization: str | None = None
+    organization: Optional[str] = None
     roles: list[Role]
 
 
@@ -83,4 +83,4 @@ class PyPiPackageModel(BaseModel):
     ownership: Ownership
     releases: dict[str, list[ReleaseFile]]
     urls: list[ReleaseFile]
-    vulnerabilities: list[Any] | None = None
+    vulnerabilities: Optional[list[Any]] = None

@@ -150,14 +150,12 @@ class BehanceScraperService(IScraperService):
                 title = title_elem.get_text(strip=True) if title_elem else "Untitled Project"
 
                 link_elem = card.select_one("a[href*='/gallery/']")
-                project_url = link_elem["href"] if link_elem and link_elem.has_attr("href") else None
+                href = link_elem.get("href") if link_elem else None
+                project_url = str(href) if href else None
                 if project_url and not project_url.startswith("http"):
                     project_url = f"https://www.behance.net{project_url}"
 
-                if not project_url:
-                    continue
-
-                if project_url in seen_urls:
+                if not project_url or project_url in seen_urls:
                     continue
                 seen_urls.add(project_url)
 

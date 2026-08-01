@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -9,28 +9,28 @@ class NpmDownloads(BaseModel):
 
 
 class NpmUser(BaseModel):
-    username: str | None = None
-    email: str | None = None
+    username: Optional[str] = None
+    email: Optional[str] = None
 
 
 class NpmLinks(BaseModel):
-    npm: str | None = None
-    homepage: str | None = None
-    repository: str | None = None
-    bugs: str | None = None
+    npm: Optional[str] = None
+    homepage: Optional[str] = None
+    repository: Optional[str] = None
+    bugs: Optional[str] = None
 
 
 class NpmPackage(BaseModel):
     name: str
     version: str
-    description: str | None = None
-    keywords: list[str] | None = None
-    sanitized_name: str | None = None
-    publisher: NpmUser | None = None
+    description: Optional[str] = None
+    keywords: Optional[list[str]] = None
+    sanitized_name: Optional[str] = None
+    publisher: Optional[NpmUser] = None
     maintainers: list[NpmUser] = Field(default_factory=list)
-    license: str | None = None
-    date: str | None = None
-    links: NpmLinks | None = None
+    license: Optional[str] = None
+    date: Optional[str] = None
+    links: Optional[NpmLinks] = None
 
 
 class NpmScoreDetail(BaseModel):
@@ -41,26 +41,26 @@ class NpmScoreDetail(BaseModel):
 
 class NpmScore(BaseModel):
     final: float = 0.0
-    detail: NpmScoreDetail | None = None
+    detail: Optional[NpmScoreDetail] = None
 
 
 class NpmFlags(BaseModel):
-    insecure: int | None = None
-    unstable: bool | None = None
-    deprecated: str | bool | None = None
+    insecure: Optional[int] = None
+    unstable: Optional[bool] = None
+    deprecated: Optional[Union[str, bool]] = None
 
 
 class NpmSearchObject(BaseModel):
     package: NpmPackage
-    downloads: NpmDownloads | None = None
+    downloads: Optional[NpmDownloads] = None
     dependents: int = 0
-    updated: str | None = None
+    updated: Optional[str] = None
     searchScore: float = Field(default=0.0, alias="searchScore")
-    score: NpmScore | None = None
-    flags: NpmFlags | dict[str, Any] | None = None
+    score: Optional[NpmScore] = None
+    flags: Optional[Union[NpmFlags, dict[str, Any]]] = None
 
 
 class NpmSearchResultModel(BaseModel):
     objects: list[NpmSearchObject] = Field(default_factory=list)
     total: int = 0
-    time: str | None = None
+    time: Optional[str] = None

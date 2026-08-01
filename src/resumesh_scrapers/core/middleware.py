@@ -23,7 +23,7 @@ def create_retry_decorator(max_attempts: int = 3, min_wait: float = 2.0, max_wai
         wait=wait_exponential(multiplier=1, min=min_wait, max=max_wait),
         retry=retry_if_exception_type((NetworkError, RateLimitError)),
         before_sleep=lambda retry_state: logger.warning(
-            f"İşlem başarısız oldu. {retry_state.next_action.sleep} saniye sonra "
+            f"İşlem başarısız oldu. {retry_state.next_action.sleep if retry_state.next_action else 0} saniye sonra "
             f"yeniden deneniyor... (Deneme: {retry_state.attempt_number}/{max_attempts})"
         ),
         reraise=True,
@@ -40,7 +40,7 @@ class RequestMiddleware:
         self.max_attempts = max_attempts
         self.retry_decorator = create_retry_decorator(max_attempts=max_attempts)
 
-    def execute_with_retry(self, func: Callable, *args: Any, **kwargs: Any) -> Any:
+    def execute_with_retry(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """
         Verilen fonksiyonu retry politikası ile sarmalayarak çalıştırır.
         """

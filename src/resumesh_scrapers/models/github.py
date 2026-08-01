@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
@@ -42,14 +42,14 @@ class GitHubRepositoryModel(BaseModel):
     full_name: Optional[str] = None
     private: bool = False
     owner: Optional[GitHubOwner] = None
-    html_url: Optional[HttpUrl | str] = None
+    html_url: Optional[Union[HttpUrl, str]] = None
     description: Optional[str] = None
     fork: bool = False
-    url: Optional[HttpUrl | str] = None
+    url: Optional[Union[HttpUrl, str]] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     pushed_at: Optional[datetime] = None
-    homepage: Optional[HttpUrl | str] = None
+    homepage: Optional[Union[HttpUrl, str]] = None
     size: int = 0
     stargazers_count: int = Field(default=0, validation_alias="stars")
     watchers_count: int = 0

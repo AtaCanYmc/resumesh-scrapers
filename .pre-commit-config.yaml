@@ -22,4 +22,5 @@ repos:
     rev: v1.10.0
     hooks:
       - id: mypy
-        additional_dependencies: [httpx, pydantic, fastapi]
+        args: [ --python-version, "3.11", --ignore-missing-imports ]
+        additional_dependencies: [httpx, pydantic, feedparser, tenacity, beautifulsoup4, yt-dlp]

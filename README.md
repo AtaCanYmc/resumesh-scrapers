@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/AtaCanYmc/resumesh-scrapers/main/assets/banner.png" alt="ResuMesh Scrapers Banner" width="600" style="max-width: 100%;" onerror="this.style.display='none'" />
+  <img src=".github/screenshots/logo.jpg" alt="ResuMesh Scrapers Logo" width="220" style="max-width: 100%; border-radius: 20px;" />
 </p>
 
 <h1 align="center">resumesh-scrapers</h1>

@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Type
+from typing import Dict, Optional, Type
 
 import httpx
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 )
 async def fetch_url(
     url: str,
-    headers: Dict[str, str] | None = None,
+    headers: Optional[Dict[str, str]] = None,
     timeout: float = 15.0,
     follow_redirects: bool = False,
     error_class: Type[ScraperError] = ScraperError,

@@ -13,7 +13,7 @@ class BehanceParser:
 
     @staticmethod
     def parse_api_projects(raw_projects: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        parsed = []
+        parsed: list[dict[str, Any]] = []
         for proj in raw_projects:
             covers = proj.get("covers", {})
             covers_url = covers.get("original") or covers.get("max_808") or covers.get("404")
@@ -35,7 +35,7 @@ class BehanceParser:
     @staticmethod
     def parse_html_projects(html_content: str) -> list[dict[str, Any]]:
         soup = BeautifulSoup(html_content, "html.parser")
-        parsed = []
+        parsed: list[dict[str, Any]] = []
         seen_urls: set[str] = set()
 
         project_cards = soup.select("div.project-card, [class*='ProjectCover']")
@@ -44,7 +44,8 @@ class BehanceParser:
             title = title_elem.get_text(strip=True) if title_elem else "Untitled Project"
 
             link_elem = card.select_one("a[href*='/gallery/']")
-            project_url = link_elem["href"] if link_elem and link_elem.has_attr("href") else None
+            href = link_elem.get("href") if link_elem else None
+            project_url = str(href) if href else None
             if project_url and not project_url.startswith("http"):
                 project_url = f"https://www.behance.net{project_url}"
 
