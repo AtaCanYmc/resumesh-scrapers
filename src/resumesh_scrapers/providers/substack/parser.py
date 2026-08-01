@@ -5,6 +5,7 @@ Substack RSS feed parser.
 import html
 import re
 from typing import Any
+
 import feedparser
 
 
@@ -22,11 +23,13 @@ class SubstackParser:
             clean_summary = re.sub(r"<[^>]+>", "", raw_summary).strip()
             clean_summary = html.unescape(clean_summary)
 
-            parsed_entries.append({
-                "title": entry.get("title", ""),
-                "url": clean_url,
-                "summary": clean_summary,
-                "published_at": entry.get("published"),
-                "raw_data": dict(entry),
-            })
+            parsed_entries.append(
+                {
+                    "title": entry.get("title", ""),
+                    "url": clean_url,
+                    "summary": clean_summary,
+                    "published_at": entry.get("published"),
+                    "raw_data": dict(entry),
+                }
+            )
         return parsed_entries

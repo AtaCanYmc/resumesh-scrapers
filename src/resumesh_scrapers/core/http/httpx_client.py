@@ -3,7 +3,9 @@ HTTPX-backed asynchronous HTTP client implementation.
 """
 
 from typing import Any, Optional
+
 import httpx
+
 from resumesh_scrapers.core.http.base import BaseHttpClient
 from resumesh_scrapers.exceptions import NetworkError, RateLimitError
 

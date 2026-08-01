@@ -4,6 +4,7 @@ Behance raw parsed data mapper to Project and Profile domain models.
 
 from datetime import datetime, timezone
 from typing import Any
+
 from resumesh_scrapers.domain import Profile, Project
 
 

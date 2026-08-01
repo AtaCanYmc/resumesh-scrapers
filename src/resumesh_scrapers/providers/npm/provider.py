@@ -3,6 +3,7 @@ NPM Provider implementing BaseProvider contract.
 """
 
 from typing import Optional
+
 from resumesh_scrapers.domain import Article, Profile, Project
 from resumesh_scrapers.exceptions import NpmScraperError
 from resumesh_scrapers.providers.base import BaseProvider

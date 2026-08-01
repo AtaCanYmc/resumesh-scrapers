@@ -4,6 +4,7 @@ Behance API and HTML profile parser.
 
 import re
 from typing import Any
+
 from bs4 import BeautifulSoup
 
 
@@ -16,17 +17,19 @@ class BehanceParser:
         for proj in raw_projects:
             covers = proj.get("covers", {})
             covers_url = covers.get("original") or covers.get("max_808") or covers.get("404")
-            parsed.append({
-                "id": str(proj.get("id")) if proj.get("id") else None,
-                "name": proj.get("name", "Untitled Project"),
-                "url": proj.get("url"),
-                "published_on": proj.get("published_on"),
-                "appreciations": proj.get("stats", {}).get("appreciations", 0),
-                "views": proj.get("stats", {}).get("views", 0),
-                "covers_url": covers_url,
-                "tags": proj.get("fields", []),
-                "raw_data": proj,
-            })
+            parsed.append(
+                {
+                    "id": str(proj.get("id")) if proj.get("id") else None,
+                    "name": proj.get("name", "Untitled Project"),
+                    "url": proj.get("url"),
+                    "published_on": proj.get("published_on"),
+                    "appreciations": proj.get("stats", {}).get("appreciations", 0),
+                    "views": proj.get("stats", {}).get("views", 0),
+                    "covers_url": covers_url,
+                    "tags": proj.get("fields", []),
+                    "raw_data": proj,
+                }
+            )
         return parsed
 
     @staticmethod
@@ -50,16 +53,20 @@ class BehanceParser:
             seen_urls.add(project_url)
 
             appreciations = 0
-            appr_elem = card.select_one("[class*='Appreciations'], [class*='appreciations'], [class*='Stat--appreciations']")
+            appr_elem = card.select_one(
+                "[class*='Appreciations'], [class*='appreciations'], [class*='Stat--appreciations']"
+            )
             if appr_elem:
                 nums = re.findall(r"\d+", appr_elem.get_text())
                 if nums:
                     appreciations = int(nums[0])
 
-            parsed.append({
-                "name": title,
-                "url": project_url,
-                "appreciations": appreciations,
-                "raw_data": {},
-            })
+            parsed.append(
+                {
+                    "name": title,
+                    "url": project_url,
+                    "appreciations": appreciations,
+                    "raw_data": {},
+                }
+            )
         return parsed

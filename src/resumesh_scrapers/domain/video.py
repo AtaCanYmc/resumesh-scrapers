@@ -4,6 +4,7 @@ Standardized Video domain model representing video content, tutorials, or stream
 
 from datetime import datetime
 from typing import Any, Optional
+
 from pydantic import BaseModel, Field
 
 

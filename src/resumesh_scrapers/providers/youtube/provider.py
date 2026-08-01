@@ -3,6 +3,7 @@ YouTube Provider implementing BaseProvider contract.
 """
 
 from typing import Optional
+
 from resumesh_scrapers.domain import Article, Profile, Project, Video
 from resumesh_scrapers.providers.base import BaseProvider
 from resumesh_scrapers.providers.youtube.mapper import YouTubeMapper

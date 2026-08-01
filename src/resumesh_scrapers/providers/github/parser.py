@@ -2,7 +2,7 @@
 GitHub API raw response parser.
 """
 
-from typing import Any, Optional
+from typing import Any
 
 
 class GitHubParser:

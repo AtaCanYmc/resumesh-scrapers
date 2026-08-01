@@ -6,11 +6,11 @@ data across multiple platforms using unified domain models.
 """
 
 import asyncio
+
 from resumesh_scrapers import (
     DevToProvider,
     GitHubProvider,
     MediumProvider,
-    ProviderRegistry,
     registry,
 )
 

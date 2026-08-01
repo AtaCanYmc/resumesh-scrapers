@@ -3,6 +3,7 @@ YouTube raw parsed metadata mapper to Video and Profile domain models.
 """
 
 from typing import Any
+
 from resumesh_scrapers.domain import Profile, Video
 
 

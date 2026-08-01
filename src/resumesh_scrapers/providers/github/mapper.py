@@ -3,7 +3,8 @@ GitHub raw parsed data to normalized domain models mapper.
 """
 
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
+
 from resumesh_scrapers.domain import Profile, Project
 
 

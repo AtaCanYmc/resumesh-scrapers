@@ -3,7 +3,8 @@ Standardized Article / Publication domain model representing blog posts, article
 """
 
 from datetime import datetime
-from typing import Any, Literal, Optional
+from typing import Any, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -18,7 +19,9 @@ class Article(BaseModel):
     content: Optional[str] = Field(default=None, description="Full body content if extracted")
     published_at: Optional[datetime] = Field(default=None, description="Publication timestamp")
     tags: list[str] = Field(default_factory=list, description="Categories, tags, or topics")
-    reading_time_minutes: Optional[int] = Field(default=None, description="Estimated reading or watching time in minutes")
+    reading_time_minutes: Optional[int] = Field(
+        default=None, description="Estimated reading or watching time in minutes"
+    )
     raw_extra: dict[str, Any] = Field(default_factory=dict, description="Platform specific unmapped payload")
 
 

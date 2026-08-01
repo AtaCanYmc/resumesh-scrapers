@@ -4,6 +4,7 @@ Environment-variable based credential provider.
 
 import os
 from typing import Optional
+
 from resumesh_scrapers.core.auth.base import BaseCredentialProvider
 
 

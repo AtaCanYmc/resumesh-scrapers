@@ -75,7 +75,7 @@ from resumesh_scrapers import registry, Profile, Project, Article, Video
 async def main():
     # 1. Access Provider Registry
     github_provider = registry.get_provider("github")
-    
+
     # 2. Get Normalized Profile
     profile: Profile = await github_provider.get_profile("octocat")
     print(f"Profile: {profile.name} (@{profile.username}) - {profile.website}")

@@ -5,6 +5,7 @@ Medium RSS feed parser.
 import html
 import re
 from typing import Any
+
 import feedparser
 
 
@@ -24,12 +25,14 @@ class MediumParser:
 
             tags = [t.term for t in entry.get("tags", []) if getattr(t, "term", None)]
 
-            parsed_entries.append({
-                "title": entry.get("title", ""),
-                "url": clean_url,
-                "summary": clean_summary,
-                "published_at": entry.get("published"),
-                "tags": tags,
-                "raw_data": dict(entry),
-            })
+            parsed_entries.append(
+                {
+                    "title": entry.get("title", ""),
+                    "url": clean_url,
+                    "summary": clean_summary,
+                    "published_at": entry.get("published"),
+                    "tags": tags,
+                    "raw_data": dict(entry),
+                }
+            )
         return parsed_entries

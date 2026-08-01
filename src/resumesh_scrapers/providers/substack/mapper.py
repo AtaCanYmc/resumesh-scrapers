@@ -4,6 +4,7 @@ Substack raw parsed data mapper to Article domain model.
 
 from datetime import datetime
 from typing import Any
+
 from resumesh_scrapers.domain import Article, Profile
 
 

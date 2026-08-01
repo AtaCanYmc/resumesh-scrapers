@@ -3,6 +3,7 @@ Standardized Skill domain model representing technical skills, languages, or too
 """
 
 from typing import Any, Optional
+
 from pydantic import BaseModel, Field
 
 

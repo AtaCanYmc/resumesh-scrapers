@@ -3,6 +3,7 @@ PyPI raw parsed data mapper to Project and Profile domain models.
 """
 
 from typing import Any
+
 from resumesh_scrapers.domain import Profile, Project
 
 
@@ -14,7 +15,11 @@ class PyPiMapper:
         keywords = parsed_pkg.get("keywords") or ""
         topics = [k.strip() for k in keywords.split(",") if k.strip()] if isinstance(keywords, str) else []
 
-        url = parsed_pkg.get("package_url") or parsed_pkg.get("home_page") or f"https://pypi.org/project/{parsed_pkg.get('name')}"
+        url = (
+            parsed_pkg.get("package_url")
+            or parsed_pkg.get("home_page")
+            or f"https://pypi.org/project/{parsed_pkg.get('name')}"
+        )
 
         return Project(
             platform="pypi",

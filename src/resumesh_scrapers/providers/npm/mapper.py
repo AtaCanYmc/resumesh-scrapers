@@ -4,6 +4,7 @@ NPM raw parsed data mapper to Project and Profile domain models.
 
 from datetime import datetime
 from typing import Any
+
 from resumesh_scrapers.domain import Profile, Project
 
 

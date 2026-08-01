@@ -113,9 +113,7 @@ async def test_medium_provider_get_articles():
         </channel>
     </rss>
     """
-    respx.get("https://medium.com/feed/@atacanymc").mock(
-        return_value=Response(200, text=sample_xml)
-    )
+    respx.get("https://medium.com/feed/@atacanymc").mock(return_value=Response(200, text=sample_xml))
 
     provider = MediumProvider()
     articles = await provider.get_articles("atacanymc")

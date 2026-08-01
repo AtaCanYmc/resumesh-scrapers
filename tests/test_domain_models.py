@@ -3,6 +3,7 @@ Unit tests for normalized domain models.
 """
 
 from datetime import datetime
+
 from resumesh_scrapers.domain import Article, Experience, Profile, Project, Skill, Video
 
 

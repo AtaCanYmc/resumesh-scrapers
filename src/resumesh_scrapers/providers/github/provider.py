@@ -3,6 +3,7 @@ GitHub Provider implementing BaseProvider contract.
 """
 
 from typing import Optional
+
 from resumesh_scrapers.domain import Article, Profile, Project
 from resumesh_scrapers.exceptions import GitHubScraperError
 from resumesh_scrapers.providers.base import BaseProvider
@@ -60,7 +61,7 @@ class GitHubProvider(BaseProvider):
                     continue
                 parsed = GitHubParser.parse_repo(raw)
                 projects.append(GitHubMapper.to_project(parsed))
-            
+
             await self.cache.set(cache_key, projects)
             return projects
         except Exception as e:

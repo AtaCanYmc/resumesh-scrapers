@@ -28,7 +28,7 @@ async def test_in_memory_cache():
 @pytest.mark.asyncio
 async def test_rate_limiter():
     limiter = RateLimiter(requests_per_second=100.0, delay_seconds=0.0)
-    
+
     async def sample():
         return 42
 

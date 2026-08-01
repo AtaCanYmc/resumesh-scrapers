@@ -3,6 +3,7 @@ Standardized Profile domain model representing developer profile details across 
 """
 
 from typing import Any, Optional
+
 from pydantic import BaseModel, Field
 
 

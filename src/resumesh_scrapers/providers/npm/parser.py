@@ -15,14 +15,16 @@ class NpmParser:
 
         for obj in objects:
             pkg = obj.get("package", {})
-            parsed_packages.append({
-                "name": pkg.get("name", ""),
-                "version": pkg.get("version"),
-                "description": pkg.get("description"),
-                "keywords": pkg.get("keywords", []),
-                "links": pkg.get("links", {}),
-                "publisher": pkg.get("publisher", {}),
-                "date": pkg.get("date"),
-                "raw_data": pkg,
-            })
+            parsed_packages.append(
+                {
+                    "name": pkg.get("name", ""),
+                    "version": pkg.get("version"),
+                    "description": pkg.get("description"),
+                    "keywords": pkg.get("keywords", []),
+                    "links": pkg.get("links", {}),
+                    "publisher": pkg.get("publisher", {}),
+                    "date": pkg.get("date"),
+                    "raw_data": pkg,
+                }
+            )
         return parsed_packages

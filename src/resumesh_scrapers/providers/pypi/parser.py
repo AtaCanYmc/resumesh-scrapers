@@ -3,6 +3,7 @@ PyPI JSON API and HTML profile parser.
 """
 
 from typing import Any
+
 from bs4 import BeautifulSoup
 
 

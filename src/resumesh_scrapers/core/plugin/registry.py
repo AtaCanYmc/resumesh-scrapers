@@ -4,6 +4,7 @@ Provider Registry & ServiceLoader equivalent for pluggable platform providers.
 
 import sys
 from typing import TYPE_CHECKING, Optional, Type
+
 if sys.version_info >= (3, 10):
     from importlib.metadata import entry_points
 else:
@@ -41,11 +42,11 @@ class ProviderRegistry:
         name = platform_name.lower()
         if name in self._instances:
             return self._instances[name]
-        
+
         provider_cls = self.get_provider_class(name)
         if provider_cls is None:
             return None
-        
+
         instance = provider_cls(**kwargs)
         self._instances[name] = instance
         return instance
@@ -58,7 +59,7 @@ class ProviderRegistry:
                 matched = eps.select(group=self.ENTRY_POINT_GROUP)
             else:
                 matched = eps.get(self.ENTRY_POINT_GROUP, [])
-            
+
             for ep in matched:
                 try:
                     cls = ep.load()

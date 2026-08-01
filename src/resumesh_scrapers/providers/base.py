@@ -4,6 +4,7 @@ BaseProvider interface enforcing uniform scraping and data collection contracts.
 
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from resumesh_scrapers.core.auth import BaseCredentialProvider, EnvCredentialProvider
 from resumesh_scrapers.core.cache import BaseCache, InMemoryCache
 from resumesh_scrapers.core.http import BaseHttpClient, HttpxHttpClient

@@ -5,7 +5,7 @@ Rate limiter with backoff, delay, and random jitter support.
 import asyncio
 import random
 import time
-from typing import Callable, Optional, TypeVar, Any
+from typing import Any, Callable, TypeVar
 
 T = TypeVar("T")
 
@@ -60,7 +60,7 @@ class RateLimiter:
                 attempt += 1
                 if attempt > self.max_retries:
                     raise exc
-                sleep_time = (self.backoff_factor ** attempt)
+                sleep_time = self.backoff_factor**attempt
                 if self.jitter:
                     sleep_time += random.uniform(0, 0.5)
                 await asyncio.sleep(sleep_time)
