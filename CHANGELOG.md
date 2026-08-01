@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.9.0...v0.10.0) (2026-08-01)
+
+
+### Features
+
+* **examples:** add enterprise reference implementations for resumesh-scrapers ([2ad5ff7](https://github.com/AtaCanYmc/resumesh-scrapers/commit/2ad5ff7283facec98957624faf038dc761c68da1))
+* **provider:** add multiple platform provider implementations and their respective mappers ([bc54e9a](https://github.com/AtaCanYmc/resumesh-scrapers/commit/bc54e9a0d071f6731281db48ae13de7ea0bfefb8))
+* update type hints to use Optional and Union for better clarity ([473cbe5](https://github.com/AtaCanYmc/resumesh-scrapers/commit/473cbe5f85ae5381ed1cd583292df01e5e6a8407))
+
 ## [0.9.0](https://github.com/AtaCanYmc/resumesh-scrapers/compare/v0.8.0...v0.9.0) (2026-07-31)
 
 
