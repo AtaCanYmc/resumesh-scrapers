@@ -5,7 +5,7 @@
 <h1 align="center">resumesh-scrapers</h1>
 
 <p align="center">
-  <strong>Enterprise-Grade, Standalone, and Decoupled Web Scraping Engines for Portfolio Building</strong>
+  <strong>A pluggable Python framework that collects, normalizes, and synchronizes developer profile data from multiple platforms into unified domain models.</strong>
 </p>
 
 <p align="center">
@@ -17,14 +17,36 @@
 
 ---
 
-`resumesh-scrapers` is a clean, modular, and robust Python library containing standalone scraping services for **GitHub**, **Dev.to**, **Medium**, **Substack**, **Behance**, **NPM**, **PyPI**, and **YouTube** platforms. Originally developed as part of the [ResuMesh](https://github.com/AtaCanYmc/ResuMesh) ecosystem, it has been decoupled to serve as a reusable package for any resume, portfolio, or profile aggregator project.
+`resumesh-scrapers` is an enterprise-grade, pluggable developer data integration framework supporting **GitHub**, **Dev.to**, **Medium**, **Substack**, **Behance**, **NPM**, **PyPI**, and **YouTube**.
+
+Rather than returning raw, platform-specific payloads, `resumesh-scrapers` normalizes all data into unified domain entities: **`Profile`**, **`Project`**, **`Article`**, **`Video`**, **`Experience`**, and **`Skill`**.
+
+---
 
 ## 🚀 Key Features
 
-*   **Robust Core Network Engine:** Centralized HTTP request handling with standard retry mechanisms powered by `tenacity` and structured logging.
-*   **Fully Decoupled Models:** Independent, clean data validation using `pydantic` v2, keeping data structures separated from database constraints.
-*   **Extensible Architecture:** Platform scrapers are isolated in a plug-and-play layout under `platforms/` allowing quick addition of new integrations (e.g. LinkedIn, GitLab).
-*   **Detailed Exceptions:** Standardized exceptions hierarchy inheriting from `ScraperError` with HTTP status code details.
+*   **Pluggable Provider Architecture:** Implement custom providers or discover community plugins dynamically via Python entry points (`resumesh.scrapers.providers`).
+*   **Normalized Domain Models:** Unified `Profile`, `Project`, `Article`, `Video`, `Experience`, and `Skill` models across all platforms.
+*   **Decoupled HTTP & Resilience:** Abstracted HTTP client (`BaseHttpClient`) with built-in rate limiting, delay, backoff, and random jitter.
+*   **In-Memory & TTL Caching:** `InMemoryCache` with TTL support to prevent unnecessary HTTP requests.
+*   **Parser & Mapper Separation:** Clean single-responsibility separation between raw extraction (`Parser`) and domain transformation (`Mapper`).
+*   **CredentialProvider System:** Secure token & API key retrieval from environment variables (`EnvCredentialProvider`) or static configuration.
+*   **Structured Exception Hierarchy:** Standardized exceptions (`ScraperError`, `RateLimitError`, `AuthenticationError`, `ParsingError`, `NetworkError`).
+
+---
+
+## 📊 Capability Matrix
+
+| Platform | Provider Class | `Profile` | `Project` | `Article` | `Video` | Primary Data Source |
+|---|---|:---:|:---:|:---:|:---:|---|
+| **GitHub** | `GitHubProvider` | ✅ | ✅ | ❌ | ❌ | REST API (v3) |
+| **Dev.to** | `DevToProvider` | ✅ | ❌ | ✅ | ❌ | REST API (Forem v1) |
+| **Medium** | `MediumProvider` | ✅ | ❌ | ✅ | ❌ | RSS Feed |
+| **Substack** | `SubstackProvider` | ✅ | ❌ | ✅ | ❌ | RSS Feed |
+| **Behance** | `BehanceProvider` | ✅ | ✅ | ❌ | ❌ | REST API (v2) / HTML Scraping |
+| **NPM** | `NpmProvider` | ✅ | ✅ | ❌ | ❌ | Registry Search API |
+| **PyPI** | `PyPiProvider` | ✅ | ✅ | ❌ | ❌ | JSON API & User HTML |
+| **YouTube** | `YouTubeProvider` | ✅ | ❌ | ❌ | ✅ | `yt-dlp` Extraction |
 
 ---
 
@@ -44,75 +66,33 @@ pip install -e .
 
 ---
 
-## 💡 Quick Start
-
-Here is a simple example showing how to scrape your repository, blog statistics, and YouTube videos:
+## 💡 Quick Start (Provider API)
 
 ```python
 import asyncio
-from resumesh_scrapers import (
-    GitHubScraper,
-    DevToScraper,
-    MediumScraper,
-    SubstackScraper,
-    BehanceScraper,
-    YouTubeScraper,
-    GitHubRepositoryModel,
-    GitHubCommitModel,
-    GitHubUserModel,
-    DevToArticleModel,
-    MediumEntryModel,
-    SubstackEntryModel,
-    BehanceProjectModel,
-    YouTubeVideoModel,
-)
+from resumesh_scrapers import registry, Profile, Project, Article, Video
 
 async def main():
-    # 1. Scraping GitHub Repositories, README Repos, Commits, and User Lists
-    github = GitHubScraper()
-    repos: list[GitHubRepositoryModel] = await github.fetch_data(
-        username="octocat",
-        pat="ghp_...",  # optional PAT token to bypass rate limit
-        include_forks=False
-    )
-    print(f"Fetched {len(repos)} repositories.")
+    # 1. Access Provider Registry
+    github_provider = registry.get_provider("github")
+    
+    # 2. Get Normalized Profile
+    profile: Profile = await github_provider.get_profile("octocat")
+    print(f"Profile: {profile.name} (@{profile.username}) - {profile.website}")
 
-    # Fetch profile README repository details
-    readme_repo = await github.fetch_readme_repo("octocat")
-    if readme_repo:
-        print(f"Profile README Repository: {readme_repo.html_url}")
+    # 3. Get Normalized Projects
+    projects: list[Project] = await github_provider.get_projects("octocat")
+    print(f"Fetched {len(projects)} normalized projects.")
 
-    # Fetch recent commits (default since: last 7 days)
-    commits: list[GitHubCommitModel] = await github.fetch_commits("octocat")
-    print(f"Fetched {len(commits)} commits.")
+    # 4. Get Normalized Articles (Dev.to / Medium)
+    devto_provider = registry.get_provider("devto")
+    articles: list[Article] = await devto_provider.get_articles("atacanymc")
+    print(f"Fetched {len(articles)} articles.")
 
-    # Fetch followers and following list
-    followers: list[GitHubUserModel] = await github.fetch_followers("octocat", per_page=10)
-    print(f"Fetched {len(followers)} followers.")
-
-
-    # 2. Scraping Dev.to Articles
-    devto = DevToScraper()
-    devto_posts: list[DevToArticleModel] = await devto.fetch_data("atacanymc")
-    print(f"Fetched {len(devto_posts)} Dev.to articles.")
-
-    # 3. Scraping Substack Publications
-    substack = SubstackScraper()
-    substack_posts: list[SubstackEntryModel] = await substack.fetch_data("atacan")
-    print(f"Fetched {len(substack_posts)} Substack posts.")
-
-    # 4. Scraping Behance Projects
-    behance = BehanceScraper()
-    behance_projects: list[BehanceProjectModel] = await behance.fetch_data(
-        username="atacanymc",
-        api_key="your_behance_api_key"  # optional, falls back to HTML scraping if not provided
-    )
-    print(f"Fetched {len(behance_projects)} Behance projects.")
-
-    # 5. Scraping YouTube Video Metadata
-    youtube = YouTubeScraper()
-    video_data: YouTubeVideoModel = await youtube.fetch_video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-    print(f"Fetched YouTube video: {video_data.title} ({video_data.view_count:,} views)")
+    # 5. Get Normalized Videos (YouTube)
+    youtube_provider = registry.get_provider("youtube")
+    videos: list[Video] = await youtube_provider.get_videos("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    print(f"Video: {videos[0].title} ({videos[0].duration_seconds}s)")
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -120,81 +100,29 @@ if __name__ == "__main__":
 
 ---
 
-## 🗺️ Clean Architecture
-
-The codebase has been refactored to enforce separation of concerns, decoupling models, platforms, and network layers:
+## 🗺️ Architecture Overview
 
 ```text
 src/resumesh_scrapers/
-├── core/                       # Shared network and utility systems
-│   ├── client.py               # Central HTTP requester with tenacity retries
-│   └── __init__.py
-├── platforms/                  # Individual platform scrapers
-│   ├── github.py
-│   ├── devto.py
-│   ├── medium.py
-│   ├── substack.py
-│   ├── behance.py
-│   ├── npm.py
-│   ├── pypi.py
-│   ├── youtube.py
-│   └── __init__.py
-└── models/                     # Platform-specific Pydantic validation schemas
-    ├── github.py
-    ├── devto.py
-    ├── medium.py
-    ├── substack.py
-    ├── behance.py
-    ├── npm.py
-    ├── pypi.py
-    ├── youtube.py
-    └── __init__.py
+├── domain/                     # Unified domain entities (Profile, Project, Article, Video, Experience, Skill)
+├── core/
+│   ├── http/                   # BaseHttpClient & HttpxHttpClient
+│   ├── resilience/             # RateLimiter (Backoff, Delay, Jitter)
+│   ├── cache/                  # InMemoryCache (TTL)
+│   ├── auth/                   # CredentialProvider (Env & Static)
+│   └── plugin/                 # ProviderRegistry & Entry Points discovery
+├── providers/                  # Pluggable platform implementations
+│   ├── base.py                 # BaseProvider contract
+│   ├── github/                 # GitHubProvider, GitHubParser, GitHubMapper
+│   ├── devto/                  # DevToProvider, DevToParser, DevToMapper
+│   ├── medium/                 # MediumProvider, MediumParser, MediumMapper
+│   ├── substack/               # SubstackProvider, SubstackParser, SubstackMapper
+│   ├── behance/                # BehanceProvider, BehanceParser, BehanceMapper
+│   ├── npm/                    # NpmProvider, NpmParser, NpmMapper
+│   ├── pypi/                   # PyPiProvider, PyPiParser, PyPiMapper
+│   └── youtube/                # YouTubeProvider, YouTubeParser, YouTubeMapper
+└── exceptions.py               # Structured exception hierarchy
 ```
-
----
-
-## 📊 Models & Capabilities
-
-| Platform | Scraper Class | Response Model | Captured Data Features |
-|---|---|---|---|
-| **GitHub** | `GitHubScraper` | `GitHubRepositoryModel`<br>`GitHubCommitModel`<br>`GitHubUserModel` | **Repos:** Stars, Forks, languages, watchers.<br>**Commits:** author, message, sha, repo, date, HTML link.<br>**Users:** login, avatar URL, HTML link (followers/following). |
-| **Dev.to** | `DevToScraper` | `DevToArticleModel` | Title, URL, Tags, Reading time, Publishing date |
-| **Medium** | `MediumScraper` | `MediumEntryModel` | Title, RSS Summary, UTM-stripped link, Category tags |
-| **Substack** | `SubstackScraper` | `SubstackEntryModel` | Title, RSS Summary, link, tags |
-| **Behance** | `BehanceScraper` | `BehanceProjectModel` | Project title, gallery URL, appreciation count, publication dates (supports API client keys) |
-| **NPM** | `NpmScraper` | `NpmSearchResultModel` | Maintainer packages, keywords, version history, publisher metadata |
-| **PyPI** | `PyPIScraper` | `PyPiPackageModel` | Releases, download statistics, license, project metadata |
-| **YouTube** | `YouTubeScraper` | `YouTubeVideoModel` | Video title, duration, view count, like count, comment count, channel info, thumbnail, tags, categories (via `yt-dlp`) |
-
-
----
-
-## ⚠️ Exception Handling
-
-All scraper exceptions inherit from `ScraperError` to simplify integration errors:
-
-```python
-from resumesh_scrapers.exceptions import ScraperError, GitHubScraperError
-
-try:
-    repos = await github_scraper.fetch_data("some_username")
-except GitHubScraperError as e:
-    print(f"GitHub API Error: {e.message} (HTTP {e.status_code})")
-except ScraperError as e:
-    print(f"Generic Scraping Exception: {e}")
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions to add more platforms (such as LinkedIn, GitLab, or Dribbble) or optimize parsers. Please open a Pull Request or file an issue to discuss your ideas!
-
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
 
 ---
 

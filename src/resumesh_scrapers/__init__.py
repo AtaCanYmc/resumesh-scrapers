@@ -1,14 +1,43 @@
 from resumesh_scrapers._version import __version__
+from resumesh_scrapers.core import (
+    BaseCache,
+    BaseCredentialProvider,
+    BaseHttpClient,
+    EnvCredentialProvider,
+    HttpxHttpClient,
+    InMemoryCache,
+    ProviderRegistry,
+    RateLimiter,
+    StaticCredentialProvider,
+    registry,
+)
+from resumesh_scrapers.domain import (
+    Article,
+    ContentItem,
+    Experience,
+    Profile,
+    Project,
+    Publication,
+    Skill,
+    Video,
+)
 from resumesh_scrapers.exceptions import (
+    AuthenticationError,
+    AuthenticationException,
+    BehanceScraperError,
     DevToScraperError,
     GitHubScraperError,
     MediumScraperError,
     NetworkError,
+    NetworkException,
     NpmScraperError,
     ParsingError,
+    ParsingException,
     PyPIScraperError,
     RateLimitError,
+    RateLimitException,
     ScraperError,
+    ScraperException,
     SubstackScraperError,
     YouTubeScraperError,
 )
@@ -45,11 +74,52 @@ from resumesh_scrapers.platforms import (
     YouTubeScraper,
     YouTubeScraperService,
 )
+from resumesh_scrapers.providers import (
+    BaseProvider,
+    BehanceProvider,
+    DevToProvider,
+    GitHubProvider,
+    MediumProvider,
+    NpmProvider,
+    PyPiProvider,
+    SubstackProvider,
+    YouTubeProvider,
+)
 
 __all__ = [
     # Version
     "__version__",
-    # Scrapers
+    # Domain Models (Normalized)
+    "Profile",
+    "Project",
+    "Article",
+    "Publication",
+    "ContentItem",
+    "Video",
+    "Experience",
+    "Skill",
+    # Providers Architecture
+    "BaseProvider",
+    "GitHubProvider",
+    "DevToProvider",
+    "MediumProvider",
+    "SubstackProvider",
+    "BehanceProvider",
+    "NpmProvider",
+    "PyPiProvider",
+    "YouTubeProvider",
+    # Core Infrastructure
+    "BaseHttpClient",
+    "HttpxHttpClient",
+    "RateLimiter",
+    "BaseCache",
+    "InMemoryCache",
+    "BaseCredentialProvider",
+    "EnvCredentialProvider",
+    "StaticCredentialProvider",
+    "ProviderRegistry",
+    "registry",
+    # Legacy Scrapers & Services
     "IScraperService",
     "GitHubScraperService",
     "GitHubScraper",
@@ -67,7 +137,7 @@ __all__ = [
     "PyPIScraperService",
     "YouTubeScraperService",
     "YouTubeScraper",
-    # Models
+    # Platform-Specific Raw Models
     "GitHubOwner",
     "GitHubLicense",
     "GitHubRepositoryModel",
@@ -80,16 +150,23 @@ __all__ = [
     "NpmSearchResultModel",
     "DevToArticleModel",
     "YouTubeVideoModel",
-    # Exceptions
+    # Exception Hierarchy
     "ScraperError",
+    "ScraperException",
     "GitHubScraperError",
     "DevToScraperError",
     "MediumScraperError",
     "SubstackScraperError",
+    "BehanceScraperError",
     "NpmScraperError",
     "PyPIScraperError",
     "YouTubeScraperError",
     "NetworkError",
+    "NetworkException",
     "RateLimitError",
+    "RateLimitException",
+    "AuthenticationError",
+    "AuthenticationException",
     "ParsingError",
+    "ParsingException",
 ]

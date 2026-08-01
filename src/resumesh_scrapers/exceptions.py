@@ -2,7 +2,7 @@
 Scraper-specific exception hierarchy.
 
 Usage:
-    from resumesh_scrapers.exceptions import GitHubScraperError
+    from resumesh_scrapers.exceptions import GitHubScraperError, RateLimitError
 
     raise GitHubScraperError("API rate limit exceeded", status_code=403)
 """
@@ -52,6 +52,13 @@ class SubstackScraperError(ScraperError):
         super().__init__(message, status_code)
 
 
+class BehanceScraperError(ScraperError):
+    """Raised when the Behance scraper encounters an error or invalid response."""
+
+    def __init__(self, message: str, status_code: Optional[int] = None):
+        super().__init__(message, status_code)
+
+
 class NpmScraperError(ScraperError):
     """Raised when the npm registry API returns an error or unexpected response."""
 
@@ -88,7 +95,16 @@ class RateLimitError(ScraperError):
     def __init__(self, message: str = "Platform rate limit has been exceeded."):
         super().__init__(message)
         self.message = message
-        self.status_code = 503
+        self.status_code = 429
+
+
+class AuthenticationError(ScraperError):
+    """Raised when authentication credentials (token, API key) are missing or invalid."""
+
+    def __init__(self, message: str = "Authentication failed or credentials invalid."):
+        super().__init__(message)
+        self.message = message
+        self.status_code = 401
 
 
 class ParsingError(ScraperError):
@@ -98,3 +114,11 @@ class ParsingError(ScraperError):
         super().__init__(message)
         self.message = message
         self.status_code = 500
+
+
+# Aliases for flexibility across naming conventions
+ScraperException = ScraperError
+RateLimitException = RateLimitError
+AuthenticationException = AuthenticationError
+ParsingException = ParsingError
+NetworkException = NetworkError

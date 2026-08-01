@@ -5,14 +5,14 @@ build-backend = "hatchling.build"
 [project]
 name = "resumesh-scrapers"
 dynamic = ["version"]
-description = "Standalone, reusable web scraping services for GitHub, Dev.to, and Medium — extracted from the ResuMesh project."
+description = "A pluggable Python framework that collects, normalizes, and synchronizes developer profile data from multiple platforms into unified domain models."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"
 authors = [
     { name = "Ata Can Yaymacı" },
 ]
-keywords = ["scraper", "github", "medium", "devto", "portfolio", "cv"]
+keywords = ["scraper", "github", "medium", "devto", "portfolio", "cv", "resumesh"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -32,6 +32,15 @@ dependencies = [
     "yt-dlp>=2024.0.0",
 ]
 
+[project.entry-points."resumesh.scrapers.providers"]
+github = "resumesh_scrapers.providers.github:GitHubProvider"
+devto = "resumesh_scrapers.providers.devto:DevToProvider"
+medium = "resumesh_scrapers.providers.medium:MediumProvider"
+substack = "resumesh_scrapers.providers.substack:SubstackProvider"
+behance = "resumesh_scrapers.providers.behance:BehanceProvider"
+npm = "resumesh_scrapers.providers.npm:NpmProvider"
+pypi = "resumesh_scrapers.providers.pypi:PyPiProvider"
+youtube = "resumesh_scrapers.providers.youtube:YouTubeProvider"
 
 [project.urls]
 Homepage = "https://github.com/AtaCanYmc/resumesh-scrapers"
