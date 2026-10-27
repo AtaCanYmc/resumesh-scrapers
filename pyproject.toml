@@ -29,7 +29,7 @@ dependencies = [
     "feedparser>=6.0.14",
     "tenacity>=8.0",
     "beautifulsoup4>=4.15.0",
-    "yt-dlp>=2026.8.19",
+    "yt-dlp>=2026.10.21",
 ]
 
 [project.entry-points."resumesh.scrapers.providers"]
